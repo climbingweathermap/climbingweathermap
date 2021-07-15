@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "weathermap"
+version = "0.1.0"
+description = "Climbing Weather Map"
+authors = ["fanoway <86997883+fanoway@users.noreply.github.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Flask = "^2.0.1"
+requests = "^2.26.0"
+Flask-RESTful = "^0.3.9"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
