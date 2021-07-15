@@ -1,24 +1,32 @@
+import json
+
 from flask import Flask
-import requests
+
+from weathermap import Location
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_pyfile("config.cfg")
+"""
+SECRET_KEY = <"sectret_key">
+WEATHER_KEY = <"weatherapi_key">
+API = "https://api.weatherapi.com/v1"
+LOCATIONS_PATH= <'path to locations.json'>
 
-aqi = "no"
-q = "London"
 
-print(app.config["API"])
-request_str = f"{app.config['API']}/current.json"
-keys = {"key": app.config["WEATHER_KEY"], "q": q, "aqi": aqi}
+"""
 
-r = requests.get(request_str, params=keys)
+# Get locations to display weather data for
+with open(app.config["LOCATIONS_PATH"]) as f:
+    locations = json.load(f)
 
-print(r.url)
-print(r)
-print("-------------------------------------")
-print(r.json())
+# List oto hold location objects from model.py
+loc_objs = []
+for name, loc in locations.items():
+    loc_objs.append(
+        Location(name, loc, app.config["API"], app.config["WEATHER_KEY"])
+    )
 
 
 @app.route("/")
 def boonjour():
-    return r.json()
+    return str(len(loc_objs))
