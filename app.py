@@ -5,15 +5,20 @@ from flask_cors import CORS
 
 from weathermap import Location
 
-app = Flask(__name__, instance_relative_config=True)
+app = Flask(__name__, instance_relative_config=True, template_folder="")
 app.config.from_pyfile("config.cfg")
 """
 config.cfg example
+
 
 SECRET_KEY = <"sectret_key">
 WEATHER_KEY = <"weatherapi_key">
 API = "https://api.weatherapi.com/v1"
 LOCATIONS_PATH= <'path to locations.json'>
+
+Locations.json example
+
+{"Smith Rock": {"lat": 44.368, "long": -121.139}}
 
 """
 

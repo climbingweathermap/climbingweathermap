@@ -1,25 +1,37 @@
 {
   "name": "weathermap",
   "version": "0.1.0",
+  "private": true,
   "description": "climbing weather map",
+  "author": {
+    "name": "Fanoway"
+  },
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
   "main": "index.js",
   "dependencies": {
+    "@popperjs/core": "^2.9.2",
     "bootstrap": "^5.0.2",
     "bootstrap-vue": "^2.21.2",
-    "vue": "^2.6.14"
+    "core-js": "^3.6.5",
+    "vue": "^3.0.0"
   },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fanoway/WeatherMap.git"
-  },
-  "author": "Fanoway",
-  "license": "MIT",
+  "_id": "weathermap@0.1.0",
   "bugs": {
     "url": "https://github.com/fanoway/WeatherMap/issues"
   },
-  "homepage": "https://github.com/fanoway/WeatherMap#readme"
+  "homepage": "https://github.com/fanoway/WeatherMap#readme",
+  "license": "MIT",
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fanoway/WeatherMap.git"
+  }
 }
