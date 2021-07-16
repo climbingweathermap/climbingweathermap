@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/fanoway/WeatherMap#readme",
   "license": "MIT",
-  "readme": "ERROR: No README data found!",
+  "readme": "README.md",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fanoway/WeatherMap.git"
