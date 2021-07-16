@@ -5,7 +5,7 @@ from flask_cors import CORS
 
 from weathermap import Location
 
-app = Flask(__name__, instance_relative_config=True, template_folder="")
+app = Flask(__name__, instance_relative_config=True, template_folder="public")
 app.config.from_pyfile("config.cfg")
 """
 config.cfg example
