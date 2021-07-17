@@ -1,6 +1,5 @@
 <template>
     <div id="mapContainer" class="center"></div>
-    <!-- <h2>{{center}}</h2> -->
 </template>
 
 <script>
@@ -9,55 +8,31 @@
     export default {
         name: "Map",
         data: function() {
-            return {
-                center: [44.368, -121.139]
-            }
+            return {}
         },
-        methods: {
-            setupLeafletMap: function() {
-                var mymap = L.map("mapContainer").setView(this.center, 10);
-                const markerIcon = L.icon({
-                    iconSize: [25, 41],
-                    iconAnchor: [10, 41],
-                    popupAnchor: [2, -40],
-                    // specify the path here
-                    iconUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-icon.png",
-                    shadowUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png"
-                });
-                L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}', {
-                    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                    subdomains: 'abcd',
-                    minZoom: 0,
-                    maxZoom: 18,
-                    ext: 'png'
-                }).addTo(mymap);
-                L.marker([44.368, -121.139], {
-                    icon: markerIcon
-                }).addTo(mymap).bindPopup("Smith Rock");
-            },
-            getCurrentLocation: function(callback) {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function(position) {
-                        var loc = [position.coords.latitude,
-                            position.coords.longitude
-                        ];
-                        callback(loc);
-                    }, err => {
-                        this.$emit("LocationNotFound")
-                        callback(this.center)
-                    })
-                } else {
-                    this.$emit("LocationNotFound");
-                    callback(this.center)
-                }
-            },
-        },
-        beforeMount: function() {
-            let $vm = this
-            this.getCurrentLocation(function(loc) {
-                $vm.center = loc,
-                    $vm.setupLeafletMap()
-            })
+        methods: {},
+        mounted: function() {
+            var mymap = L.map("mapContainer").fitWorld();
+            mymap.locate({
+                setView: true,
+                maxZoom: 10
+            });
+            const markerIcon = L.icon({
+                iconSize: [25, 41],
+                iconAnchor: [10, 41],
+                popupAnchor: [2, -40],
+                // specify the path here
+                iconUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-icon.png",
+                shadowUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png"
+            });
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }).addTo(mymap);
+            L.marker([44.368, -121.139], {
+                icon: markerIcon
+            }).addTo(mymap).bindPopup("Smith Rock");
         },
     }
 </script>

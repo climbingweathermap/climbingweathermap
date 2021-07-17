@@ -5,10 +5,7 @@
     <teleport to=".footer">
         <Footer />
     </teleport>
-    <div v-if="showLocWarning">
-        <Modal :title="LocWarning" :text="LocWarningBody" @close="toggleLocWarning" />
-    </div>
-    <Map @locationNotFound="toggleLocWarning" />
+    <Map />
 </template>
 
 <script>
@@ -24,18 +21,10 @@
             Map,
             Footer
         },
-        data() {
-            return {
-                showLocWarning: false,
-                LocWarning: "Your location could not be found",
-                LocWarningBody: "Ensure location detection is permitted"
-            }
+        data: function() {
+            return {}
         },
-        methods: {
-            toggleLocWarning() {
-                this.showLocWarning = !this.showLocWarning;
-            }
-        }
+        methods: {}
     };
 </script>
 

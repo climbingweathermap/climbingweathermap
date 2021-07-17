@@ -2,7 +2,6 @@ import json
 
 from flask import Flask, render_template, url_for, redirect
 from flask_cors import CORS
-import pandas as pd
 
 from weathermap import Location
 
@@ -47,9 +46,4 @@ for name, loc in locations.items():
 
 @app.route("/")
 def root():
-    return redirect(url_for("index"), code=302)
-
-
-@app.route("/index")
-def index():
     return render_template("index.html")
