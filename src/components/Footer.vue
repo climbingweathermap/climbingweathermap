@@ -1,5 +1,5 @@
 <template>
-    <footer class="footer">
+    <footer class="footer border-top                 border-primary">
         <div class="container">
             Copyright ©2021 Fanoway
         </div>
