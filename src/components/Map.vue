@@ -1,5 +1,6 @@
 <template>
     <div id="mapContainer" class="center"></div>
+    <!-- <h2>{{center}}</h2> -->
 </template>
 
 <script>
@@ -13,10 +14,8 @@
             }
         },
         methods: {
-            setupLeafletMap: function(mycenter) {
-                console.log("setup")
-                console.log(mycenter)
-                var mymap = L.map("mapContainer").setView(mycenter, 13);
+            setupLeafletMap: function() {
+                var mymap = L.map("mapContainer").setView(this.center, 13);
                 const markerIcon = L.icon({
                     iconSize: [25, 41],
                     iconAnchor: [10, 41],
@@ -32,37 +31,41 @@
                     maxZoom: 18,
                     ext: 'png'
                 }).addTo(mymap);
-                // L.marker([44.368, -121.139], {
-                // icon: markerIcon
-                // }).addTo(mymap).bindPopup("Smith Rock").openPopup();
+                L.marker([44.368, -121.139], {
+                    icon: markerIcon
+                }).addTo(mymap).bindPopup("Smith Rock");
             },
-            getCurrentLocation(callback) {
+            getCurrentLocation: function(callback) {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(position) {
-                        callback([position.coords.latitude,
+                        var loc = [position.coords.latitude,
                             position.coords.longitude
-                        ]);
-                    });
+                        ];
+                        callback(loc);
+                    }, err => {
+                        this.$emit("LocationNotFound")
+                    })
                 } else {
-                    this.$emit("LocationNotFound")
+                    this.$emit("LocationNotFound");
                     throw new Error("Your browser does not support geolocation.");
                 }
             },
         },
-        mounted() {
-            getCurrentLocation(function(loc) {
-                consol.log(this.center)
-            });
-            this.setupLeafletMap(this.center);
-        }
-    };
+        beforeMount: function() {
+            let $vm = this
+            this.getCurrentLocation(function(loc) {
+                $vm.center = loc,
+                    $vm.setupLeafletMap()
+            })
+        },
+    }
 </script>
 
 <style>
     #mapContainer {
         width: 100%;
         height: 100%;
-        z-index: -1;
+        z-index: 0;
     }
 
     .center {
