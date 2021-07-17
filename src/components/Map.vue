@@ -44,10 +44,11 @@
                         callback(loc);
                     }, err => {
                         this.$emit("LocationNotFound")
+                        callback(this.center)
                     })
                 } else {
                     this.$emit("LocationNotFound");
-                    throw new Error("Your browser does not support geolocation.");
+                    callback(this.center)
                 }
             },
         },
