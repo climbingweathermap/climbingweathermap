@@ -1,18 +1,16 @@
 <template>
-    <div class="content">
-        <teleport to=".navb">
-            <NavBar />
-        </teleport>
-        <teleport to=".footer">
-            <Footer />
-        </teleport>
-        <div class="row align-left">
-            <div class="col-sm">
-                <SideBar />
-            </div>
-            <div class="col-xxl align-left">
-                <Map />
-            </div>
+    <teleport to=".my-navbar">
+        <NavBar />
+    </teleport>
+    <teleport to=".footer">
+        <Footer />
+    </teleport>
+    <div class="d-flex justify-content-center">
+        <div class="p-2 ">
+            <SideBar />
+        </div>
+        <div class="p-2 flex-grow-1">
+            <Map />
         </div>
     </div>
 </template>

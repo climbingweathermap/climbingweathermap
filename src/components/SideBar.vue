@@ -9,15 +9,5 @@
 </script>
 
 <style>
-    .sidebar {
-        position: fixed;
-        width: 200px;
-        top: 50px;
-        padding: 2rem;
-        padding-top: 40px;
-
-
-
-
-    }
+    .sidebar {}
 </style>
