@@ -6,11 +6,11 @@
         <teleport to=".footer">
             <Footer />
         </teleport>
-        <div class="row">
-            <div class="col">
+        <div class="row align-left">
+            <div class="col-sm">
                 <SideBar />
             </div>
-            <div class="col">
+            <div class="col-xxl align-left">
                 <Map />
             </div>
         </div>
