@@ -1,13 +1,22 @@
 <template>
     <div class="backdrop">
-        <div class="modal">
-            <h1>{{title}}</h1>
-            <p> {{content}}</p>
+        <div class="modal" :class="{highlight: theme === 'highlight'}">
+            <h1>{{header}}</h1>
+            <p>{{text}}</p>
+            <button @click='closeModal'>Close</button>
         </div>
     </div>
 </template>
 
 <script>
+    export default {
+        props: ['header', 'text', 'theme'],
+        methods: {
+            closeModal() {
+                this.$emit('closeModal')
+            }
+        }
+    }
 </script>
 
 <style>
@@ -31,5 +40,15 @@
         color: #03cfb4;
         border: none;
         padding: 0;
+
+    }
+
+    .modal.highlight {
+        color: #ffffff;
+        background: #96494f;
+    }
+
+    .modal.highlight h1 {
+        color: #ffffff;
     }
 </style>

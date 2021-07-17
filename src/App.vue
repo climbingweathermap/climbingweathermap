@@ -1,10 +1,10 @@
 <template>
-    <h1> {{title}} </h1>
-    <p>
-        <input type="text" ref="name">
-        <button @click='handleClick'>Click Me</button>
-    </p>
-    <Modal />
+    <h1>{{title}}</h1>
+    <br>
+    <button @click='toggleModal'>Click Me</button>
+    <div v-if="showModal">
+        <Modal @closeModal='toggleModal' :header="modal_header" :text="modal_text" :theme="modal_theme" />
+    </div>
 </template>
 
 <script>
@@ -16,14 +16,16 @@
         },
         data() {
             return {
-                title: 'My first view app '
+                title: 'My first view app',
+                modal_header: "HELLO!",
+                modal_text: "World!!",
+                modal_theme: "highlight",
+                showModal: false
             }
         },
         methods: {
-            handleClick() {
-                console.log(this.$refs.name)
-                this.$refs.name.classList.add('active')
-                this.$refs.name.focus()
+            toggleModal() {
+                this.showModal = !this.showModal
             }
         }
     }
