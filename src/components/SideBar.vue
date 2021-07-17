@@ -1,5 +1,6 @@
 <template>
-    <div class="sidebar  "> <!-- border-end border-primary -->
+    <div class="sidebar  bg-primary text-light">
+        <!-- border-end border-primary -->
         <h1> sidebar </h1>
     </div>
 </template>
@@ -9,12 +10,14 @@
 
 <style>
     .sidebar {
-
-        left: -30%;
+        position: fixed;
         width: 200px;
-        /*height: 92.5vh;*/
+        top: 50px;
         padding: 2rem;
         padding-top: 40px;
+
+
+
 
     }
 </style>

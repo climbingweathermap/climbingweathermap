@@ -1,6 +1,11 @@
 <template>
     <div class="content">
-        <NavBar />
+        <teleport to=".navb">
+            <NavBar />
+        </teleport>
+        <teleport to=".footer">
+            <Footer />
+        </teleport>
         <div class="row">
             <div class="col">
                 <SideBar />
@@ -9,9 +14,6 @@
                 <Map />
             </div>
         </div>
-        <teleport to=".footer">
-            <Footer />
-        </teleport>
     </div>
 </template>
 
