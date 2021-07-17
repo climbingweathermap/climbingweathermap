@@ -5,14 +5,7 @@
     <teleport to=".footer">
         <Footer />
     </teleport>
-    <div class="d-flex justify-content-center">
-        <div class="p-2 ">
-            <SideBar />
-        </div>
-        <div class="p-2 flex-grow-1">
-            <Map />
-        </div>
-    </div>
+    <Map v-bind:center=[44.368,-121.139] />
 </template>
 
 <script>

@@ -2,6 +2,7 @@ import json
 
 from flask import Flask, render_template, url_for, redirect
 from flask_cors import CORS
+import pandas as pd
 
 from weathermap import Location
 
@@ -24,6 +25,13 @@ Locations.json example
 
 # enable CORS
 CORS(app, resources={r"/index/*": {"origins": "*"}})
+
+# Get lcoatiosn for open beta
+
+df = pd.read_json(
+    "../../opendata/openbeta-usa-routes-aug-2020.zip", lines=True
+)
+print(df)
 
 # Get locations to display weather data for
 with open(app.config["LOCATIONS_PATH"]) as f:
