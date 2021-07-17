@@ -1,9 +1,10 @@
 <template>
-    <div class="backdrop">
+    <div class="backdrop" @click.self='closeModal'>
         <div class="modal" :class="{highlight: theme === 'highlight'}">
-            <h1>{{header}}</h1>
-            <p>{{text}}</p>
-            <button @click='closeModal'>Close</button>
+            <slot></slot>
+            <div class="actions">
+                <slot name="links"></slot>
+            </div>
         </div>
     </div>
 </template>
@@ -37,7 +38,7 @@
     }
 
     .modal h1 {
-        color: #03cfb4;
+        color: #96494f;
         border: none;
         padding: 0;
 

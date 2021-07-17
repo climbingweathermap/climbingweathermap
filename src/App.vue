@@ -3,7 +3,15 @@
     <br>
     <button @click='toggleModal'>Click Me</button>
     <div v-if="showModal">
-        <Modal @closeModal='toggleModal' :header="modal_header" :text="modal_text" :theme="modal_theme" />
+        <Modal @closeModal='toggleModal' :theme="modal_theme">
+<h1> Hello World </h1>
+<p> Bonjour la monde</p>
+
+<template v-slot:links>
+    <a href='#'>sign up now</a>
+    <br> <a href="#">More info</a>
+</template>
+        </Modal>
     </div>
 </template>
 
@@ -17,8 +25,6 @@
         data() {
             return {
                 title: 'My first view app',
-                modal_header: "HELLO!",
-                modal_text: "World!!",
                 modal_theme: "highlight",
                 showModal: false
             }
