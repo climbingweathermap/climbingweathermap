@@ -15,7 +15,7 @@
         },
         methods: {
             setupLeafletMap: function() {
-                var mymap = L.map("mapContainer").setView(this.center, 13);
+                var mymap = L.map("mapContainer").setView(this.center, 10);
                 const markerIcon = L.icon({
                     iconSize: [25, 41],
                     iconAnchor: [10, 41],
