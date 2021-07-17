@@ -10,4 +10,8 @@
 </script>
 
 <style>
+    .footer {
+        flex-shrink: 0;
+        text-align: center;
+    }
 </style>
