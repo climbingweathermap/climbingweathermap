@@ -1,0 +1,26 @@
+$primary: #FF3366;
+$secondary:#2EC4B6;
+$success:#1B512D;
+$info:#20A4F3;
+$warning:#FDE74C;
+$danger:#F18F01;
+$light:#F6F7F8;
+$dark: #011627;
+
+$theme-colors: ("primary": $primary,
+"secondary": $secondary,
+"success": $success,
+"info": $info,
+"warning": $warning,
+"danger": $danger,
+"light": $light,
+"dark": $dark);
+
+@each $color,
+$value in $theme-colors {
+    .swatch-#{$color} {
+        color: color-contrast($value);
+    }
+}
+
+@import 'node_modules/bootstrap/scss/bootstrap';
