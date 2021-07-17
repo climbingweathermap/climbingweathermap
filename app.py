@@ -26,7 +26,7 @@ Locations.json example
 # enable CORS
 CORS(app, resources={r"/index/*": {"origins": "*"}})
 
-# Get lcoatiosn for open beta
+# Get locations for open beta
 
 df = pd.read_json(
     "../../opendata/openbeta-usa-routes-aug-2020.zip", lines=True

@@ -5,13 +5,15 @@
     <teleport to=".footer">
         <Footer />
     </teleport>
-    <Map v-bind:center=[44.368,-121.139] />
+    <div v-if="showLocWarning">
+        <Modal :title="LocWarning" :text="LocWarningBody" @close="toggleLocWarning" />
+    </div>
+    <Map @locationNotFound="toggleLocWarning" />
 </template>
 
 <script>
     import Modal from './components/Modal.vue'
     import NavBar from './components/NavBar.vue'
-    import SideBar from './components/SideBar.vue'
     import Map from './components/Map.vue'
     import Footer from './components/Footer.vue'
     export default {
@@ -19,11 +21,22 @@
         components: {
             Modal,
             NavBar,
-            SideBar,
             Map,
             Footer
+        },
+        data() {
+            return {
+                showLocWarning: false,
+                LocWarning: "Your location could not be found",
+                LocWarningBody: "Ensure location detection is permitted"
+            }
+        },
+        methods: {
+            toggleLocWarning() {
+                this.showLocWarning = !this.showLocWarning;
+            }
         }
-    }
+    };
 </script>
 
 <style>

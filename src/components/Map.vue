@@ -7,10 +7,16 @@
     import L from "leaflet";
     export default {
         name: "Map",
-        props: ['center'],
+        data: function() {
+            return {
+                center: [44.368, -121.139]
+            }
+        },
         methods: {
-            setupLeafletMap: function() {
-                var mymap = L.map("mapContainer").setView(this.center, 13);
+            setupLeafletMap: function(mycenter) {
+                console.log("setup")
+                console.log(mycenter)
+                var mymap = L.map("mapContainer").setView(mycenter, 13);
                 const markerIcon = L.icon({
                     iconSize: [25, 41],
                     iconAnchor: [10, 41],
@@ -26,13 +32,28 @@
                     maxZoom: 18,
                     ext: 'png'
                 }).addTo(mymap);
-                L.marker(this.center, {
-                    icon: markerIcon
-                }).addTo(mymap).bindPopup("<b>Hello</b><br />This is home.").openPopup();
+                // L.marker([44.368, -121.139], {
+                // icon: markerIcon
+                // }).addTo(mymap).bindPopup("Smith Rock").openPopup();
+            },
+            getCurrentLocation(callback) {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        callback([position.coords.latitude,
+                            position.coords.longitude
+                        ]);
+                    });
+                } else {
+                    this.$emit("LocationNotFound")
+                    throw new Error("Your browser does not support geolocation.");
+                }
             },
         },
         mounted() {
-            this.setupLeafletMap();
+            getCurrentLocation(function(loc) {
+                consol.log(this.center)
+            });
+            this.setupLeafletMap(this.center);
         }
     };
 </script>
@@ -41,6 +62,7 @@
     #mapContainer {
         width: 100%;
         height: 100%;
+        z-index: -1;
     }
 
     .center {
