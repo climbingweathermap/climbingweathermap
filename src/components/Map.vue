@@ -1,48 +1,5 @@
 <template>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
-    <h1>map</h1>
+    <div id="mapContainer"></div>
 </template>
 
 <script>
