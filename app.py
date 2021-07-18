@@ -1,4 +1,3 @@
-import json
 import requests
 
 from flask import Flask, jsonify
@@ -24,7 +23,7 @@ LOCATIONS_API= "https://climb-api.openbeta.io/geocode/v1/sectors"
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Get locations from open beta
-query = {"latlng": "45,-122", "radius": 99999999}
+query = {"latlng": "44.368,-121.139", "radius": 10}
 sectors = requests.get(
     app.config["LOCATIONS_API"], params=query, verify=False
 ).json()
@@ -47,6 +46,5 @@ def root():
 @app.route("/api/v1/locations", methods=["GET"])
 def all_locations():
     """v1 api to get location"""
-    # jsonify everything into one list
-
+    # jsonify everything into one response
     return jsonify([loc.to_json() for loc in loc_objs])

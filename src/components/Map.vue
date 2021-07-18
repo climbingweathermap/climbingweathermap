@@ -1,40 +1,43 @@
 <template>
-    <div id="mapContainer" class="center"></div>
+    <l-map class="center fullmap" ref="map" @ready="onReady">
+        <l-tile-layer url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png' attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' subdomains='abcd'>
+        </l-tile-layer>
+        <l-marker v-for='location in locations' v-bind:lat-lng='location.loc'>
+            <l-popup class="center">
+                <h4>{{location.name}}</h4>
+                {{location.count}} Routes
+                <br>
+                {{location.weather}}
+            </l-popup>
+        </l-marker>
+    </l-map>
 </template>
 
 <script>
     import "leaflet/dist/leaflet.css";
-    import L from "leaflet";
+    import dateQuickSlider from 'vue-date-quick-slider';
+    import {
+        LMap,
+        LTileLayer,
+        LMarker,
+        LPopup,
+        dateQuickSlider
+    } from "@vue-leaflet/vue-leaflet";
     import axios from 'axios'
     export default {
         name: "Map",
+        components: {
+            LMap,
+            LTileLayer,
+            LMarker,
+            LPopup
+        },
         data: function() {
             return {
                 locations: [],
-                myMap: null,
-                markerIcon: L.icon({
-                    iconSize: [25, 41],
-                    iconAnchor: [10, 41],
-                    popupAnchor: [2, -40],
-                    // specify the path here
-                    iconUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-icon.png",
-                    shadowUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png"
-                }),
             }
         },
         methods: {
-            createMap() {
-                this.myMap = L.map("mapContainer").fitWorld();
-                this.myMap.locate({
-                    setView: true,
-                    maxZoom: 10
-                });
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-                    subdomains: 'abcd',
-                    maxZoom: 19
-                }).addTo(this.myMap);
-            },
             getLocationPromise: function() {
                 const path = 'http://localhost:5000/api/v1/locations'
                 return axios({
@@ -43,19 +46,17 @@
                         timeout: 8000
                     }).then(res => res.data)
                     .catch(err => console.error(err))
-            }
+            },
+            onReady: (mapObject) => {
+                mapObject.locate({
+                    setView: true,
+                    maxZoom: 10
+                })
+            },
         },
         mounted: function() {
-            this.createMap()
             this.getLocationPromise().then(res => {
-                this.location = res
-                for (let i in res) {
-                    //Plot markers
-                    var location = res[i];
-                    L.marker(location.loc, {
-                        icon: this.markerIcon
-                    }).addTo(this.myMap).bindPopup(location.name);
-                }
+                this.locations = res
             })
         }
     }
@@ -65,14 +66,14 @@
  -->
 
 <style>
-    #mapContainer {
-        width: 100%;
-        height: 100%;
-        z-index: 0;
+    .fullmap {
+        width: 100vw;
+        hiehgt: 100vh;
     }
 
     .center {
         margin: auto;
         text-align: center;
+
     }
 </style>

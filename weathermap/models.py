@@ -9,9 +9,9 @@ class Location:
     def __init__(self, data, API_URL, API_KEY):
         """Get weather data."""
 
-        print(data)
         self.name = data["meta_parent_sector"]
         self.loc = [data["lat"], data["lng"]]  # list [lat,long]
+        self.nroutes = data["count"]
 
         # Get Weather Data
         keys = {"key": API_KEY, "q": f"{self.loc[0]},{self.loc[1]}"}
@@ -33,7 +33,6 @@ class Location:
         # 3 days so then can extract last 48 hours
         dt = today - timedelta(days=3)
         dt = dt.strftime("%Y-%m-%d")
-
         end_dt = today.strftime("%Y-%m-%d")
 
         keys = {
@@ -56,4 +55,5 @@ class Location:
             "name": self.name,
             "loc": self.loc,
             "weather": self.weather_summary(),
+            "count": self.nroutes,
         }
