@@ -13,12 +13,14 @@
     "main": "index.js",
     "dependencies": {
         "@popperjs/core": "^2.9.2",
+        "axios": "^0.21.1",
         "bootstrap": "^5.0.0-beta3",
         "core-js": "^3.6.5",
         "leaflet": "^1.7.1",
         "sass": "^1.35.2",
         "sass-loader": "^10",
-        "vue": "^3.0.0"
+        "vue": "^3.0.0",
+        "vue-router": "^3.5.2"
     },
     "devDependencies": {
         "@vue/cli-plugin-babel": "~4.5.0",
