@@ -23,7 +23,7 @@ Locations.json example
 """
 
 # enable CORS
-CORS(app, resources={r"/api/": {"origins": "*"}})
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Get locations from open beta
 # TODO
@@ -44,7 +44,7 @@ for name, data in locations.items():
 
 @app.route("/")
 def root():
-    return f"{len(loc_objs)} locations loaded"
+    return jsonify("WeatherMap")
 
 
 @app.route("/api/v1/locations", methods=["GET"])

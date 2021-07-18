@@ -54,7 +54,7 @@
                     var location = res[i];
                     L.marker(location.loc, {
                         icon: this.markerIcon
-                    }).addTo(this.myMap).bindPopup("<a href= location.url>location.name</a>");
+                    }).addTo(this.myMap).bindPopup("<a href=" + location.url + " > " + location.name + " </a>");
                 }
             })
         }
