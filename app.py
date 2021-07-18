@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 
 from weathermap import Location
@@ -23,7 +23,7 @@ Locations.json example
 """
 
 # enable CORS
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/api/": {"origins": "*"}})
 
 # Get locations from open beta
 # TODO
@@ -35,13 +35,21 @@ with open(app.config["LOCATIONS_PATH"], encoding="utf8") as f:
 # List to hold location objects from model.py
 loc_objs = []
 n_locs = len(locations)
-for name, loc in locations.items():
+for name, data in locations.items():
     print(f"loading... {len(loc_objs)}/{n_locs} locations")
     loc_objs.append(
-        Location(name, loc, app.config["API"], app.config["WEATHER_KEY"])
+        Location(name, data, app.config["API"], app.config["WEATHER_KEY"])
     )
 
 
 @app.route("/")
 def root():
     return f"{len(loc_objs)} locations loaded"
+
+
+@app.route("/api/v1/locations", methods=["GET"])
+def all_locations():
+    """v1 api to get location"""
+    # jsonify everything into one list
+
+    return jsonify([loc.to_json() for loc in loc_objs])

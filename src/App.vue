@@ -11,15 +11,15 @@
 <script>
     import Modal from './components/Modal.vue'
     import NavBar from './components/NavBar.vue'
-    import Map from './components/Map.vue'
     import Footer from './components/Footer.vue'
+    import Map from './components/Map.vue'
     export default {
         name: 'App',
         components: {
             Modal,
             NavBar,
+            Footer,
             Map,
-            Footer
         },
         data: function() {
             return {}
