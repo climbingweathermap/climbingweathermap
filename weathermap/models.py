@@ -6,13 +6,14 @@ from datetime import date, timedelta
 class Location:
     """Climbing location."""
 
-    def __init__(self, name, data, API_URL, API_KEY):
+    def __init__(self, data, API_URL, API_KEY):
         """Get weather data."""
 
-        self.name = name
-        self.loc = [data["lat"], data["long"]]  # list [lat,long]
-        self.url = data["url"]
+        print(data)
+        self.name = data["meta_parent_sector"]
+        self.loc = [data["lat"], data["lng"]]  # list [lat,long]
 
+        # Get Weather Data
         keys = {"key": API_KEY, "q": f"{self.loc[0]},{self.loc[1]}"}
         self.current = requests.get(
             f"{API_URL}/current.json", params=keys
@@ -54,6 +55,5 @@ class Location:
         return {
             "name": self.name,
             "loc": self.loc,
-            "url": self.url,
             "weather": self.weather_summary(),
         }
