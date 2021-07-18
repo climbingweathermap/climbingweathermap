@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, render_template, url_for, redirect
+from flask import Flask
 from flask_cors import CORS
 
 from weathermap import Location
@@ -23,15 +23,20 @@ Locations.json example
 """
 
 # enable CORS
-CORS(app, resources={r"/index/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "*"}})
+
+# Get locations from open beta
+# TODO
 
 # Get locations to display weather data for
-with open(app.config["LOCATIONS_PATH"]) as f:
+with open(app.config["LOCATIONS_PATH"], encoding="utf8") as f:
     locations = json.load(f)
 
 # List to hold location objects from model.py
 loc_objs = []
+n_locs = len(locations)
 for name, loc in locations.items():
+    print(f"loading... {len(loc_objs)}/{n_locs} locations")
     loc_objs.append(
         Location(name, loc, app.config["API"], app.config["WEATHER_KEY"])
     )
@@ -39,9 +44,4 @@ for name, loc in locations.items():
 
 @app.route("/")
 def root():
-    return redirect(url_for("index"), code=302)
-
-
-@app.route("/index")
-def index():
-    return render_template("index.html")
+    return f"{len(loc_objs)} locations loaded"

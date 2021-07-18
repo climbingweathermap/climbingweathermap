@@ -1,26 +1,16 @@
 <template>
-    <div class="content">
-        <teleport to=".navb">
-            <NavBar />
-        </teleport>
-        <teleport to=".footer">
-            <Footer />
-        </teleport>
-        <div class="row">
-            <div class="col">
-                <SideBar />
-            </div>
-            <div class="col">
-                <Map />
-            </div>
-        </div>
-    </div>
+    <teleport to=".my-navbar">
+        <NavBar />
+    </teleport>
+    <teleport to=".footer">
+        <Footer />
+    </teleport>
+    <Map />
 </template>
 
 <script>
     import Modal from './components/Modal.vue'
     import NavBar from './components/NavBar.vue'
-    import SideBar from './components/SideBar.vue'
     import Map from './components/Map.vue'
     import Footer from './components/Footer.vue'
     export default {
@@ -28,11 +18,14 @@
         components: {
             Modal,
             NavBar,
-            SideBar,
             Map,
             Footer
-        }
-    }
+        },
+        data: function() {
+            return {}
+        },
+        methods: {}
+    };
 </script>
 
 <style>
