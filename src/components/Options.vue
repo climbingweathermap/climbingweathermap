@@ -36,6 +36,9 @@
                 this.$emit("dateChanged", this.viewDate)
             }
         },
+        mounted: function() {
+            this.$emit("dateChanged", this.viewDate)
+        }
     }
 </script>
 
