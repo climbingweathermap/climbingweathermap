@@ -6,6 +6,7 @@ $warning:#FDE74C;
 $danger:#F18F01;
 $light:#F6F7F8;
 $dark: #011627;
+$primary-color: #333;
 
 $theme-colors: ("primary": $primary,
 "secondary": $secondary,
@@ -16,6 +17,13 @@ $theme-colors: ("primary": $primary,
 "light": $light,
 "dark": $dark);
 
+
+.sliders {
+    --slider-connect-bg: #{$secondary};
+    --slider-tooltip-bg: #{$secondary};
+    --slider-handle-ring-color: #{$secondary};
+}
+
 @each $color,
 $value in $theme-colors {
     .swatch-#{$color} {
@@ -24,36 +32,3 @@ $value in $theme-colors {
 }
 
 @import 'node_modules/bootstrap/scss/bootstrap';
-
-@mixin flexbox() {
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-}
-
-@mixin flex($values) {
-    -webkit-box-flex: $values;
-    -moz-box-flex: $values;
-    -webkit-flex: $values;
-    -ms-flex: $values;
-    flex: $values;
-}
-
-@mixin order($val) {
-    -webkit-box-ordinal-group: $val;
-    -moz-box-ordinal-group: $val;
-    -ms-flex-order: $val;
-    -webkit-order: $val;
-    order: $val;
-}
-
-.wrapper {
-    @include flexbox();
-}
-
-.item {
-    @include flex(1 200px);
-    @include order(2);
-}

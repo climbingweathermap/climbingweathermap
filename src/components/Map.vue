@@ -1,16 +1,20 @@
 <template>
-    <l-map style="height:100%" class="center" ref="map" @ready="onReady">
-        <l-tile-layer url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png' attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' subdomains='abcd'>
-        </l-tile-layer>
-        <l-marker v-for='location in locations' v-bind:lat-lng='location.loc'>
-            <l-popup class="center">
-                <h4>{{location.name}}</h4>
-                {{location.count}} Routes
-                <br>
-                {{location.weather}}
-            </l-popup>
-        </l-marker>
-    </l-map>
+    <div>
+        <h3> {{test}}</h3>
+        <l-map style="height:100%" @ready="onReady">
+            <l-tile-layer url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png' attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' subdomains='abcd'>
+            </l-tile-layer>
+            <l-marker v-for='(location, index) in locations' :key="index" v-bind:lat-lng='location.loc'>
+                <h1>index</h1>
+                <l-popup class="center">
+                    <h4>{{location.name}}</h4>
+                    {{location.count}} Routes
+                    <br>
+                    {{location.weather}} on {{viewDate}}
+                </l-popup>
+            </l-marker>
+        </l-map>
+    </div>
 </template>
 
 <script>
@@ -21,7 +25,6 @@
         LMarker,
         LPopup,
     } from "@vue-leaflet/vue-leaflet";
-    import axios from 'axios';
     export default {
         name: "Map",
         components: {
@@ -33,18 +36,11 @@
         data: function() {
             return {
                 locations: [],
+                viewDate: '',
+                test: 'test'
             }
         },
         methods: {
-            getLocationPromise: function() {
-                const path = 'http://localhost:5000/api/v1/locations'
-                return axios({
-                        url: path,
-                        method: 'get',
-                        timeout: 8000
-                    }).then(res => res.data)
-                    .catch(err => console.error(err))
-            },
             onReady: (mapObject) => {
                 mapObject.locate({
                     setView: true,
@@ -52,17 +48,8 @@
                 })
             },
         },
-        mounted: function() {
-            this.getLocationPromise().then(res => {
-                this.locations = res
-            })
-        }
     }
 </script>
 
 <style>
-    .center {
-        margin: auto;
-        text-align: center;
-    }
 </style>

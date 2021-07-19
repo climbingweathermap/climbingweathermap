@@ -2,6 +2,7 @@
 .PHONY: serve flask build
 
 serve:
+	npm run compile:sass
 	npm run serve
 
 flask:
