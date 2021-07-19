@@ -1,6 +1,5 @@
 <template>
     <div>
-        <h3> {{viewDate}}</h3>
         <l-map style="height:100%" @ready="onReady">
             <l-tile-layer url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png' attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' subdomains='abcd'>
             </l-tile-layer>
