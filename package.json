@@ -13,14 +13,14 @@
     "main": "index.js",
     "dependencies": {
         "@popperjs/core": "^2.9.2",
+        "@vueform/slider": "github:vueform/slider",
         "axios": "^0.21.1",
         "bootstrap": "^5.0.0-beta3",
         "core-js": "^3.6.5",
         "leaflet": "^1.7.1",
         "sass": "^1.35.2",
         "sass-loader": "^10",
-        "vue": "^3.0.0",
-        "vue-date-quick-slider": "^0.1.1"
+        "vue": "^3.0.0"
     },
     "devDependencies": {
         "@vue-leaflet/vue-leaflet": "^0.6.1",
