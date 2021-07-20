@@ -4,12 +4,12 @@
             <l-tile-layer url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png' attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' subdomains='abcd'>
             </l-tile-layer>
             <l-marker v-for='(location, index) in locations' :key="index" :lat-lng='location.loc'>
-                <l-icon :icon-url="location.weather.icon" :icon-size="iconSize" />
+                <l-icon :icon-url="location.weather[viewDateIso].icon" :icon-size="iconSize" />
                 <l-popup class="center">
                     <h4>{{location.name}}</h4>
                     {{location.count}} Routes
                     <br>
-                    {{location.weather.text}} on {{viewDate}}
+                    {{location.weather[viewDateIso].text}} on {{viewDate}}
                     <br>
                     <img :src="location.weather.icon">
                 </l-popup>
@@ -27,6 +27,7 @@
         LPopup,
         LIcon
     } from "@vue-leaflet/vue-leaflet";
+    import dateformat from "dateformat"
     export default {
         name: "Map",
         components: {
@@ -46,11 +47,13 @@
             }
         },
         computed: {
-            iconUrl() {
-                return `https://placekitten.com/${this.iconWidth}/${this.iconHeight}`;
-            },
             iconSize() {
                 return [this.iconWidth, this.iconHeight];
+            },
+            viewDateIso() {
+                var dateFormat = require("dateformat");
+                var _temp = new Date(this.viewDate)
+                return dateFormat(_temp, "isoDate")
             }
         },
         methods: {

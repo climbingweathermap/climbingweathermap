@@ -19,7 +19,7 @@
                 day: (1000 * 60 * 60 * 24),
                 viewDate: Date.now(),
                 dates: [Date.now(),
-                    Date.now() + ((1000 * 60 * 60 * 24) * 10)
+                    Date.now() + ((1000 * 60 * 60 * 24) * 4)
                 ],
             }
         },
