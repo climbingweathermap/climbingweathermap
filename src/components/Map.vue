@@ -10,19 +10,19 @@
                         <h4>{{location.name}}</h4>
                         {{location.count}} Routes
                         <br>
+                        <br>
                         <div>
                             {{location.weather[viewDateIso].text}} on {{viewDate}} </div>
-                        <br>
                         <div>
                             Humidity:{{location.weather[viewDateIso].humidity}}% </div>
                         <div>
-                            Temperature (°C): {{location.weather[viewDateIso].min_temp_c}} / {{location.weather[viewDateIso].max_temp_c}}
+                            Temperature: {{location.weather[viewDateIso].min_temp_c}} / {{location.weather[viewDateIso].max_temp_c}} °C
                         </div>
                         <div>
                             Rain today {{location.weather[viewDateIso].rain_perc}}% = {{location.weather[viewDateIso].totalprecip_mm}} mm
                         </div>
                         <div>
-                            Rain last 2 days (mm): {{location.weather[viewDateIso].["rain_last_2_day(mm)"]}}
+                            Rain last 2 days: {{location.weather[viewDateIso].["rain_last_2_day(mm)"]}} mm
                         </div>
                     </div>
                 </l-popup>

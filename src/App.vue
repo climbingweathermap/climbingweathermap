@@ -37,7 +37,6 @@
                     day: 'numeric'
                 };
                 this.viewDate = new Date(viewDate).toLocaleDateString(undefined, options)
-                console.log(this.viewDate)
             },
             getLocationPromise: function() {
                 const path = 'http://localhost:5000/api/v1/locations'
@@ -77,5 +76,18 @@
 
     .item-main {
         flex-grow: 4;
+    }
+
+    .options-bar {
+        display: flex;
+        align-items: flex-center;
+        align-content: center;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-evenly;
+        margin-top: 100px;
+        margin-bottom: 100px;
+        margin-right: 50px;
+        margin-left: 100px;
     }
 </style>

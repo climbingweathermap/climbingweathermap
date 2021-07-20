@@ -1,7 +1,9 @@
 <template>
-    <div class="mt-5 ms-5 me-5 row align-items-center">
-        <div class=" col-lg">
-            <Slider class="sliders me-auto" v-model="viewDate" :min="dates[0]" :max="dates[1]" :format="formatDate" :step="day" @update="dateChanged" />
+    <div class="my-options-bar">
+        <Slider class="sliders-secondary date-slider" v-model="viewDate" :min="dates[0]" :max="dates[1]" :format="formatDate" :step="day" @update="dateChanged" />
+        <div>
+            <h3>
+                test</h3>
         </div>
     </div>
 </template>
@@ -43,4 +45,22 @@
 </script>
 
 <style src="@vueform/slider/themes/default.css">
+</style>
+
+<style>
+    .my-options-bar {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        margin-top: 40px;
+        margin-bottom: 10px;
+        margin-right: 50px;
+        margin-left: 50px;
+    }
+
+    .date-slider {
+        width: 80%;
+    }
 </style>
