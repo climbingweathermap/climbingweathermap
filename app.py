@@ -23,7 +23,7 @@ LOCATIONS_API= "https://climb-api.openbeta.io/geocode/v1/sectors"
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Get locations from open beta
-query = {"latlng": "45.482300,-122.558441", "radius": 10}
+query = {"latlng": "45.482300,-122.558441", "radius": 100}
 sectors = requests.get(
     app.config["LOCATIONS_API"], params=query, verify=False
 ).json()
