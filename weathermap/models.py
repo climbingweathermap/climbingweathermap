@@ -1,6 +1,7 @@
 """ Weathermap data models """
 import requests
 from datetime import date, timedelta
+from datetime import datetime
 import pandas as pd
 
 
@@ -40,7 +41,6 @@ class Location:
             f"{API_URL}/history.json", params=keys
         ).json()
 
-    def weather_summary(self):
         """Summarise weather
 
         Returns JSON like:
@@ -52,7 +52,8 @@ class Location:
                 rain_last_2_day(mm): 40
                 min_temp_c:15
                 max_temp_c:31
-                humidity: "14%"
+                humidity: "14"
+                rain_perc: "21"
             },
             2021-07-20
             {
@@ -68,26 +69,49 @@ class Location:
 
         date_range = [x.strftime("%Y-%m-%d") for x in datetime_range]
 
-        response = {}
+        self.weather = {}
 
         for day in date_range:
             # Select correct date from forecast api response
             for api_day in self.forecast["forecast"]["forecastday"]:
                 if api_day["date"] == day:
+                    day_1 = (
+                        datetime.strptime(day, "%Y-%m-%d") - timedelta(days=1)
+                    ).strftime("%Y-%m-%d")
+                    day_2 = (
+                        datetime.strptime(day, "%Y-%m-%d") - timedelta(days=2)
+                    ).strftime("%Y-%m-%d")
 
-                    response[day] = {
+                    rain_last_2_day = self.get_precip([day_1, day_2])
+
+                    self.weather[day] = {
                         "text": api_day["day"]["condition"]["text"],
                         "icon": api_day["day"]["condition"]["icon"],
+                        "min_temp_c": api_day["day"]["mintemp_c"],
+                        "max_temp_c": api_day["day"]["maxtemp_c"],
+                        "humidity": api_day["day"]["avghumidity"],
+                        "rain_perc": api_day["day"]["daily_chance_of_rain"],
+                        "rain_mm": api_day["day"]["totalprecip_mm"],
+                        "rain_last_2_day(mm)": rain_last_2_day,
                     }
 
-        print(response)
-        return response
+    def get_precip(self, days):
+        """Get the rain fall on a given day (in mm) or list of days.
+
+        day must be formatted as yyyy-mm-dd
+        """
+
+        # ensure its a list
+        if not isinstance(days, list):
+            days = [days]
+
+        return 1
 
     def to_json(self):
         """Return JSON version of object"""
         return {
             "name": self.name,
             "loc": self.loc,
-            "weather": self.weather_summary(),
+            "weather": self.weather,
             "count": self.nroutes,
         }

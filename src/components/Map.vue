@@ -5,13 +5,26 @@
             </l-tile-layer>
             <l-marker v-for='(location, index) in locations' :key="index" :lat-lng='location.loc'>
                 <l-icon :icon-url="location.weather[viewDateIso].icon" :icon-size="iconSize" />
-                <l-popup class="center">
-                    <h4>{{location.name}}</h4>
-                    {{location.count}} Routes
-                    <br>
-                    {{location.weather[viewDateIso].text}} on {{viewDate}}
-                    <br>
-                    <img :src="location.weather.icon">
+                <l-popup>
+                    <div class="popup center">
+                        <h4>{{location.name}}</h4>
+                        {{location.count}} Routes
+                        <br>
+                        <div>
+                            {{location.weather[viewDateIso].text}} on {{viewDate}} </div>
+                        <br>
+                        <div>
+                            Humidity:{{location.weather[viewDateIso].humidity}}% </div>
+                        <div>
+                            Temperature (°C): {{location.weather[viewDateIso].min_temp_c}} / {{location.weather[viewDateIso].max_temp_c}}
+                        </div>
+                        <div>
+                            Rain today {{location.weather[viewDateIso].rain_perc}}% = {{location.weather[viewDateIso].totalprecip_mm}} mm
+                        </div>
+                        <div>
+                            Rain last 2 days (mm): {{location.weather[viewDateIso].["rain_last_2_day(mm)"]}}
+                        </div>
+                    </div>
                 </l-popup>
             </l-marker>
         </l-map>
@@ -70,5 +83,12 @@
 <style>
     .center {
         text-align: center;
+    }
+
+    .popup {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
     }
 </style>
