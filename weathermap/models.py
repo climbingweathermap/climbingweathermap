@@ -14,11 +14,6 @@ class Location:
         self.nroutes = data["count"]
 
         # Get Weather Data
-        keys = {"key": API_KEY, "q": f"{self.loc[0]},{self.loc[1]}"}
-        self.current = requests.get(
-            f"{API_URL}/current.json", params=keys
-        ).json()
-
         keys = {
             "key": API_KEY,
             "q": f"{self.loc[0]},{self.loc[1]}",
@@ -46,7 +41,7 @@ class Location:
 
     def weather_summary(self):
         """Summarise weather"""
-        return self.current
+        return self.forecast["current"]["condition"]
 
     def to_json(self):
         """Return JSON version of object"""

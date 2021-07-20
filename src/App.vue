@@ -2,7 +2,7 @@
     <div class="content  vh-100">
         <NavBar class="p-2" />
         <Options class="p-2" @dateChanged="onDateChanged" />
-        <Map v-if:="isMounted" class=" p-2 item-main" :locations="locations" :viewDate="viewDate" />
+        <Map class=" p-2 item-main" :locations="locations" :viewDate="viewDate" />
         <Footer class="p-2" />
     </div>
 </template>
@@ -27,7 +27,6 @@
             return {
                 locations: [],
                 viewDate: '',
-                isMounted: false,
             }
         },
         methods: {
@@ -53,10 +52,6 @@
         mounted: function() {
             this.getLocationPromise().then(result => {
                 this.locations = result
-                this.isMounted = true
-                for (let loc in this.locations) {
-                    console.log(this.locations[loc])
-                }
             })
         }
     };
