@@ -2,7 +2,7 @@
     <div class="content  vh-100">
         <NavBar class="" />
         <Options class="" @dateChanged="onDateChange" @overlayChanged="onOverlayChange" />
-        <Map class="item-main" :locations="locations" :viewDate="viewDate" />
+        <Map class="item-main" :locations="locations" :viewDate="viewDate" :overlay="overlay" />
         <Footer class="" />
     </div>
 </template>
@@ -27,6 +27,7 @@
             return {
                 locations: [],
                 viewDate: '',
+                overlay: '',
             }
         },
         methods: {
@@ -39,7 +40,7 @@
                 this.viewDate = new Date(viewDate).toLocaleDateString(undefined, options)
             },
             onOverlayChange: function(overlay) {
-                console.log(overlay)
+                this.overlay = overlay
             },
             getLocationPromise: function() {
                 const path = 'http://localhost:5000/api/v1/locations'
@@ -79,5 +80,6 @@
 
     .item-main {
         flex-grow: 4;
+        z-index: 1;
     }
 </style>

@@ -52,6 +52,7 @@
     }
 
     .my-dropdown-container {
+        position: fixed;
         background-color: var(--bs-light);
         min-width: 50px;
         box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
@@ -62,6 +63,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        overflow: visible;
     }
 
     .my-dropdown-item {

@@ -1,7 +1,7 @@
 <template>
     <div class="my-options-bar">
         <Slider class="sliders-secondary date-slider" v-model="viewDate" :min="dates[0]" :max="dates[1]" :format="formatDate" :step="day" @update="dateChanged" />
-        <Dropdown class="overlay-dropdown" title="Overlay" defaultOption="Summary" :options="overlays" @setSelectedOption="changeOverlay" />
+        <Dropdown class="overlay-dropdown" title="Change Overlay" defaultOption="Summary" :options="overlays" @setSelectedOption="changeOverlay" />
     </div>
 </template>
 
