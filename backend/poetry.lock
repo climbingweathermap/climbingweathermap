@@ -66,12 +66,12 @@ async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
 
 [[package]]
-name = "flask-cache"
-version = "0.13.1"
-description = "Adds cache support to your Flask application"
+name = "flask-caching"
+version = "1.10.1"
+description = "Adds caching support to your Flask application"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.5"
 
 [package.dependencies]
 Flask = "*"
@@ -239,7 +239,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "ce407efb863771a5b20eecd0107d9d2798c5da285ce20a87a3dd79c717dfe7df"
+content-hash = "16b54bb1a0656f0406de1f745207766cdc0302be163d2d76fcac257366fcc1a5"
 
 [metadata.files]
 aniso8601 = [
@@ -266,10 +266,9 @@ flask = [
     {file = "Flask-2.0.1-py3-none-any.whl", hash = "sha256:a6209ca15eb63fc9385f38e452704113d679511d9574d09b2cf9183ae7d20dc9"},
     {file = "Flask-2.0.1.tar.gz", hash = "sha256:1c4c257b1892aec1398784c63791cbaa43062f1f7aeb555c4da961b20ee68f55"},
 ]
-flask-cache = [
-    {file = "Flask-Cache-0.13.1.tar.gz", hash = "sha256:90126ca9bc063854ef8ee276e95d38b2b4ec8e45fd77d5751d37971ee27c7ef4"},
-    {file = "Flask_Cache-0.13.1-py2.7.egg", hash = "sha256:33187b3ddceeee233fe3db68ffcc118b5498e8ad28edde711bcbdcbf4924ce35"},
-    {file = "Flask_Cache-0.13.1-py3.3.egg", hash = "sha256:ae9d1ac4549517dfbc1f178ccc5429f61f836be3cc109a0b2481c98b3711c329"},
+flask-caching = [
+    {file = "Flask-Caching-1.10.1.tar.gz", hash = "sha256:cf19b722fcebc2ba03e4ae7c55b532ed53f0cbf683ce36fafe5e881789a01c00"},
+    {file = "Flask_Caching-1.10.1-py3-none-any.whl", hash = "sha256:bcda8acbc7508e31e50f63e9b1ab83185b446f6b6318bd9dd1d45626fba2e903"},
 ]
 flask-cors = [
     {file = "Flask-Cors-3.0.10.tar.gz", hash = "sha256:b60839393f3b84a0f3746f6cdca56c1ad7426aa738b70d6c61375857823181de"},

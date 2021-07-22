@@ -3,14 +3,15 @@ import requests
 
 from flask import Flask, jsonify
 from flask_cors import CORS
-from flask.ext.cache import Cache
+from flask_caching import Cache
 
 
 from weathermap import Location
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_pyfile("config.cfg")
-cache = Cache(app, config={"CACHE_TYPE": "simple"})
+cache = Cache(app)
+
 """
 config.cfg example
 
@@ -67,7 +68,7 @@ def root():
 
 
 @app.route("/api/v1/locations", methods=["GET"])
-@cache.cached(timeout=7200)
+@cache.cached()
 def all_locations():
     """v1 api to get location"""
     locations = get_locations()

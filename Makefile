@@ -6,7 +6,7 @@ serve:
 	cd frontend && npm run serve
 
 flask:
-	cd backend && poetry run Flask run
+	cd backend && poetry run flask run
 
 build:
 	cd frontend && npm run build

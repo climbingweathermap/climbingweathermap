@@ -64,7 +64,6 @@
         flex-direction: column;
         align-items: flex-start;
         overflow: visible;
-        width: 100;
     }
 
     .my-dropdown-item {
