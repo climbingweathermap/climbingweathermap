@@ -2,13 +2,15 @@
 .PHONY: serve flask build
 
 serve:
-	npm run compile:sass
-	npm run serve
+	cd frontend && npm run compile:sass
+	cd frontend && npm run serve
 
 flask:
-	poetry run Flask run
+	cd backend && poetry run Flask run
 
 build:
-	npm run build
+	cd frontend && npm run build
+
+
 
 
