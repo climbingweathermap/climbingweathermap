@@ -54,7 +54,7 @@
     .my-dropdown-container {
         position: fixed;
         background-color: var(--bs-light);
-        min-width: 50px;
+        min-width: 40px;
         box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
         padding: 4px 4px;
         z-index: 4;
@@ -64,6 +64,7 @@
         flex-direction: column;
         align-items: flex-start;
         overflow: visible;
+        width: 100;
     }
 
     .my-dropdown-item {
@@ -72,8 +73,6 @@
         border: none;
         background-color: var(--bs-light);
         color: var(--bs-secondary);
-
-
     }
 
     .my-dropdown-item:hover {

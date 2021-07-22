@@ -1,3 +1,4 @@
+import json
 import requests
 
 from flask import Flask, jsonify
@@ -15,27 +16,38 @@ config.cfg example
 SECRET_KEY = <"sectret_key">
 WEATHER_KEY = <"weatherapi_key">
 WEATHER_API = "https://api.weatherapi.com/v1"
-LOCATIONS_API= "https://climb-api.openbeta.io/geocode/v1/sectors"
+LOCATIONS = ".\\instance\\locations.json"
 
 """
 
 # enable CORS
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-# Get locations from open beta
-query = {"latlng": "45.482300,-122.558441", "radius": 100}
-sectors = requests.get(
-    app.config["LOCATIONS_API"], params=query, verify=False
-).json()
+# Get locations from open beta dataset in instance folder
+with open(app.config["LOCATIONS"], "r") as f:
+    sectors = json.load(f)
+
 
 # List to hold location objects from model.py
 loc_objs = []
 n_locs = len(sectors)
-for sector in sectors:
+for name, sector in sectors.items():
     print(f"loading... {len(loc_objs)+1}/{n_locs} sectors")
-    loc_objs.append(
-        Location(sector, app.config["WEATHER_API"], app.config["WEATHER_KEY"])
-    )
+    try:
+        loc_objs.append(
+            Location(
+                name,
+                sector,
+                app.config["WEATHER_API"],
+                app.config["WEATHER_KEY"],
+            )
+        )
+    except json.decoder.JSONDecodeError as e:
+        print(e)
+        print(f"failed = {name}")
+    except requests.exceptions.ConnectionError as e:
+        print(e)
+        print(f"failed = {name}")
 
 
 @app.route("/")

@@ -7,10 +7,9 @@
                 <l-icon :icon-url="location.weather[viewDateIso].icon" :icon-size="iconSize" />
                 <l-popup>
                     <div class="popup center">
-                        <h4>{{location.name}}</h4>
-                        {{location.count}} Routes
+                        <h4 :href="location.url">{{location.name}}</h4>
+                        <img :src="getRainIcon(location)" />
                         <br>
-                        <img src="../assets/icons/Rain_0_64x64.png" />
                         <br>
                         <div>
                             {{location.weather[viewDateIso].text}} on {{viewDate}} </div>
@@ -29,12 +28,10 @@
                 </l-popup>
             </l-marker>
             <l-marker v-if="overlay=='Rain'" v-for='(location, index) in locations' :key=" index" :lat-lng='location.loc'>
-                <l-icon :icon-size="iconSize" icon-url="../assets/icons/Rain_0_64x64.png" />
+                <l-icon :icon-size="iconSize" :icon-url="getRainIcon(location)" />
                 <l-popup>
                     <div class="popup center">
-                        <h4>{{location.name}}</h4>
-                        {{location.count}} Routes
-                        <br>
+                        <h4 :href="location.url">{{location.name}}</h4>
                         <img :src="location.weather[viewDateIso].icon">
                         <br>
                         <div>
@@ -57,10 +54,10 @@
                 <l-icon :icon-size="iconSize" />
                 <l-popup>
                     <div class="popup center">
-                        <h4>{{location.name}}</h4>
-                        {{location.count}} Routes
-                        <br>
+                        <h4 :href="location.url">{{location.name}}</h4>
                         <img :src="location.weather[viewDateIso].icon">
+                        <br>
+                        <img :src="getRainIcon(location)" />
                         <br>
                         <div>
                             {{location.weather[viewDateIso].text}} on {{viewDate}} </div>
@@ -101,10 +98,11 @@
             LPopup,
             LIcon
         },
-        props: ['locations',
-            'viewDate',
-            "overlay",
-        ],
+        props: {
+            locations: Array,
+            viewDate: String,
+            overlay: String,
+        },
         data: function() {
             return {
                 iconWidth: 64,
@@ -119,7 +117,10 @@
                 var dateFormat = require("dateformat");
                 var _temp = new Date(this.viewDate)
                 return dateFormat(_temp, "isoDate")
-            }
+            },
+            rain_icon() {
+                return [require("../assets/icons/Rain_0_64x64.png"), require("../assets/icons/Rain_1_64x64.png"), require("../assets/icons/Rain_2_64x64.png"), require("../assets/icons/Rain_3_64x64.png")]
+            },
         },
         methods: {
             onReady: (mapObject) => {
@@ -128,6 +129,9 @@
                     maxZoom: 10
                 })
             },
+            getRainIcon: function(location) {
+                return this.rain_icon[location.weather. [this.viewDateIso].rain_score]
+            }
         },
     }
 </script>

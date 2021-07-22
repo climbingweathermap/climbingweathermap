@@ -64,14 +64,14 @@
         flex-grow: 4;
         margin-top: 50px;
         margin-bottom: 10px;
-        margin-right: 50px;
-        margin-left: 50px;
+        margin-right: 55px;
+        margin-left: 55px;
     }
 
     .overlay-dropdown {
         margin-top: 5px;
         margin-bottom: 5px;
-        margin-right: 100px;
+        margin-right: 25px;
         margin-left: 5px;
     }
 </style>
