@@ -10,21 +10,20 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 from rich.progress import track
 
-from weathermap import Location
+from .weathermap import Location
 
 app = Flask(__name__)
 app.config.from_pyfile("settings.py")
 cache = Cache(app)
 
 """
-config.cfg example
+Exampe .env
 
-
-SECRET_KEY = <"sectret_key">
-WEATHER_KEY = <"weatherapi_key">
+SECRET_KEY = "sectret_key"
+WEATHER_KEY = "weatherapi_key"
 WEATHER_API = "https://api.weatherapi.com/v1"
-LOCATIONS = ".\\instance\\locations.json"
-DEBUG=TRUE
+LOCATIONS = "./data/locations.json"
+
 CACHE_DEFAULT_TIMEOUT = 3600
 CACHE_TYPE = 'SimpleCache'
 REFRESH_MINUTES = 20
@@ -85,6 +84,9 @@ def get_weather(locations):
 )
 def refresh_weather():
     """refresh the cached weather data."""
+    app.logger.info(
+        f"{datetime.now().strftime('%d/%m/%Y %H:%M:%S')}] Getting Weather..."
+    )
     weather = get_weather(get_locations())
     cache.clear()
     cache.set("weather", weather)
@@ -112,10 +114,4 @@ def all_locations():
 
 
 # Ensure weather is gathered when initialised
-
 refresh_weather()
-
-
-if __name__ == "__main__":
-    app.run()
-    refresh_weather()

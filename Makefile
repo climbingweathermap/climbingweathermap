@@ -6,12 +6,13 @@ serve:
 	cd frontend && npm run serve
 
 flask:
-	cd backend && poetry run python -m flask run  --eager-loading
+	cd backend && poetry run python -m flask run
 
 docker:
-	-docker rmi weathermap -f
-	docker build --tag weathermap .
-	docker images
+	docker-compose build
+	docker-compose up
+
+
 
 
 
