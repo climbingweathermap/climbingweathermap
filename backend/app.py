@@ -10,7 +10,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 from rich.progress import track
 
-
 from weathermap import Location
 
 app = Flask(__name__)

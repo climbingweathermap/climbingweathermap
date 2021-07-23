@@ -1,7 +1,5 @@
 from os import environ
-from dotenv import load_dotenv
 
-load_dotenv(".env")
 
 SECRET_KEY = environ.get("SECRET_KEY")
 WEATHER_API = environ.get("WEATHER_API")

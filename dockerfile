@@ -17,6 +17,5 @@ RUN poetry install --no-dev
 
 EXPOSE 5000
 
-CMD dir
 CMD poetry run flask run
 

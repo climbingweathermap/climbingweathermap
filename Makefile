@@ -6,7 +6,7 @@ serve:
 	cd frontend && npm run serve
 
 flask:
-	cd backend && poetry run flask run
+	cd backend && poetry run python -m flask run  --eager-loading
 
 docker:
 	-docker rmi weathermap -f
