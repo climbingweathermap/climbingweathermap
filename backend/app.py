@@ -13,8 +13,8 @@ from rich.progress import track
 
 from weathermap import Location
 
-app = Flask(__name__, instance_relative_config=True)
-app.config.from_pyfile("config.cfg")
+app = Flask(__name__)
+app.config.from_pyfile("settings.py")
 cache = Cache(app)
 
 """

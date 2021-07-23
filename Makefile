@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := serve
-.PHONY: serve flask build
+.PHONY: serve flask docker
 
 serve:
 	cd frontend && npm run compile:sass
@@ -8,8 +8,10 @@ serve:
 flask:
 	cd backend && poetry run flask run
 
-build:
-	cd frontend && npm run build
+docker:
+	-docker rmi weathermap -f
+	docker build --tag weathermap .
+	docker images
 
 
 
