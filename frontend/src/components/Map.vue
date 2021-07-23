@@ -35,8 +35,7 @@
                         <img :src="location.weather[viewDateIso].icon">
                         <br>
                         <div>
-                            {{location.weather[viewDateIso].text}} on {{viewDate}} </div>
-                        <div>
+{{location.weather[viewDateIso].text}} on {{viewDate}} </div>                        <div>
                             Humidity:{{location.weather[viewDateIso].humidity}}% </div>
                         <div>
                             Temperature: {{location.weather[viewDateIso].min_temp_c}} / {{location.weather[viewDateIso].max_temp_c}} °C
