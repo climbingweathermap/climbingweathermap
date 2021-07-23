@@ -3,8 +3,8 @@
         <l-map style="height:100%" @ready="onReady">
             <l-tile-layer url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png' attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' subdomains='abcd'>
             </l-tile-layer>
-            <div v-if="locations.length >0">
-                <l-marker v-if="overlay=='Summary'" v-for='(location, index) in locations' :key=" index" :lat-lng='location.loc'>
+            <div v-if="locations">
+                <l-marker v-if="overlay=='Summary'" v-for='(location, index) in locations || []' :key=" index" :lat-lng='location.loc'>
                     <l-icon :icon-url="location.weather[viewDateIso].icon" :icon-size="iconSize" />
                     <l-popup>
                         <div class="popup center">

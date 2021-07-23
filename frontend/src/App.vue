@@ -1,8 +1,8 @@
 <template>
-    <div class="content  vh-100">
+    <div v-if="gotData" class="content  vh-100">
         <NavBar class="" />
-        <Options class="" @dateChanged="onDateChange" @overlayChanged="onOverlayChange" />
-        <Map class="item-main" :locations="locations" :viewDate="viewDate" :overlay="overlay" />
+        <Options class="" @dateChanged="onDateChange" @overlayChanged="onOverlayChange" :startDate="Date.parse(Object.keys(locations[0].weather)[0])" :endDate="Date.parse(Object.keys(locations[0].weather).slice(-1)[0] )" />
+        <Map class=" item-main" :locations="locations" :viewDate="viewDate" :overlay="overlay" />
         <Footer class="" />
     </div>
 </template>
@@ -28,6 +28,7 @@
                 locations: [],
                 viewDate: '',
                 overlay: '',
+                gotData: false,
             }
         },
         methods: {
@@ -55,6 +56,9 @@
         mounted: function() {
             this.getLocationPromise().then(result => {
                 this.locations = result
+                this.gotData = true
+                console.log(Date.parse(Object.keys(this.locations[0].weather)[0]));
+                console.log(Date.parse(Object.keys(this.locations[0].weather).slice(-1)[0]))
             })
         }
     };

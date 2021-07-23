@@ -1,6 +1,6 @@
 <template>
     <div class="my-options-bar">
-        <Slider class="sliders-secondary date-slider" v-model="viewDate" :min="dates[0]" :max="dates[1]" :format="formatDate" :step="day" @update="dateChanged" />
+        <Slider class="sliders-secondary date-slider" v-model="viewDate" :min="startDate" :max="endDate" :format="formatDate" :step="day" @update="dateChanged" />
         <Dropdown class="overlay-dropdown" title="Change Overlay" defaultOption="Summary" :options="overlays" @setSelectedOption="changeOverlay" />
     </div>
 </template>
@@ -10,6 +10,7 @@
     import Dropdown from './Dropdown.vue'
     export default {
         name: "Options",
+        props: ['startDate', 'endDate'],
         components: {
             Slider,
             Dropdown
@@ -17,11 +18,8 @@
         // 1000 = 1s
         data: function() {
             return {
-                day: (1000 * 60 * 60 * 24),
-                viewDate: Date.now(),
-                dates: [Date.now(),
-                    Date.now() + ((1000 * 60 * 60 * 24) * 4)
-                ],
+                day: (1000 * 3600 * 24),
+                viewDate: 0,
                 overlays: ["Summary", "Rain", "Temperature"]
             }
         },
@@ -42,8 +40,9 @@
             }
         },
         mounted: function() {
+            this.viewDate = this.startDate
             this.$emit("dateChanged", this.viewDate)
-        }
+        },
     }
 </script>
 
