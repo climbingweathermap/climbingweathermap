@@ -57,8 +57,6 @@
             this.getLocationPromise().then(result => {
                 this.locations = result
                 this.gotData = true
-                console.log(Date.parse(Object.keys(this.locations[0].weather)[0]));
-                console.log(Date.parse(Object.keys(this.locations[0].weather).slice(-1)[0]))
             })
         }
     };
