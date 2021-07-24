@@ -5,15 +5,12 @@
         <div v-if="gotData">
             <Map class=" item-main" :locations="locations" :viewDate="viewDate" :overlay="overlay" />
         </div>
-        <div>
+        <div v-else>
             <Modal title="Error" text="Weather data could not be fetched. Please try again shortly" />
         </div>
-        <Footer class="" />
-    </div>
 </template>
 
 <script>
-    // ☐ add error modal when cant connect to server
     import Modal from './components/Modal.vue'
     import NavBar from './components/NavBar.vue'
     import Footer from './components/Footer.vue'
@@ -60,11 +57,9 @@
             },
         },
         mounted: function() {
-            this.$nextTick(function() {
-                this.getLocationPromise().then(result => {
-                    this.locations = result
-                    this.gotData = true
-                })
+            this.getLocationPromise().then(result => {
+                this.locations = result
+                this.gotData = true
             })
         }
     };
@@ -84,8 +79,7 @@
         align-items: stretch;
         align-content: stretch;
         flex-direction: column;
-        justify-content: flex-start;
-
+        justify-content: space-evenly;
     }
 
     .item-main {
