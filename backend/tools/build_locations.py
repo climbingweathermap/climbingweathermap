@@ -1,7 +1,6 @@
 """ Combine open beta location (area) files"""
 import json
 import jsonlines
-import os
 import glob
 
 locations = {}

@@ -90,8 +90,6 @@ def refresh_weather():
     app.logger.info("Getting Weather...")
     weather = get_weather(get_locations())
     app.logger.info("Weather Collected")
-
-    cache.clear()
     cache.set("weather", weather)
 
 
