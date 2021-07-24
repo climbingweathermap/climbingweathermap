@@ -1,6 +1,6 @@
 <template>
     <nav class="navbar navbar-expand navbar-dark bg-primary p-2">
-        <a class="navbar-brand me-auto" href="#">Climbing-Weather</a>
+        <a class="navbar-brand me-auto" href="#">Climbing Weather Map</a>
     </nav>
 </template>
 
