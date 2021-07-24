@@ -1,17 +1,13 @@
-.DEFAULT_GOAL := serve
-.PHONY: serve flask docker
+.DEFAULT_GOAL := test
+.PHONY: test deploy
 
-serve:
-	cd frontend && npm run compile:sass
-	cd frontend && npm run serve
-
-flask:
-	cd backend && poetry run python -m flask run
-
-docker:
+test:
 	docker-compose build
 	docker-compose up
 
+deploy:
+	git add .
+	eb deploy --staged
 
 
 
