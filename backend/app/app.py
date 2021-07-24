@@ -1,12 +1,12 @@
 import json
+import requests
+import logging
 from datetime import datetime
 
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_caching import Cache
-
 from apscheduler.schedulers.background import BackgroundScheduler
-
 from rich.progress import track
 
 from .weathermap import Location
@@ -54,7 +54,6 @@ def get_weather(locations):
 
     # List to hold location objects from model.py
     weather = []
-    print("\n")
     for name, location in track(
         locations.items(),
         description=(
@@ -72,11 +71,11 @@ def get_weather(locations):
                 )
             )
         except json.decoder.JSONDecodeError as e:
-            print(e)
-            print(f"failed = {name}")
+            app.logger.error(e)
+            app.logger.error(f"failed = {name}")
         except requests.exceptions.ConnectionError as e:
-            print(e)
-            print(f"failed = {name}")
+            app.logger.error(e)
+            app.logger.error(f"failed = {name}")
 
     return weather
 
@@ -88,10 +87,10 @@ def get_weather(locations):
 )
 def refresh_weather():
     """refresh the cached weather data."""
-    app.logger.info(
-        f"{datetime.now().strftime('%d/%m/%Y %H:%M:%S')}] Getting Weather..."
-    )
+    app.logger.info("Getting Weather...")
     weather = get_weather(get_locations())
+    app.logger.info("Weather Collected")
+
     cache.clear()
     cache.set("weather", weather)
 
@@ -117,5 +116,9 @@ def all_locations():
     return jsonify([loc.to_json() for loc in weather])
 
 
-# Ensure weather is gathered when initialised
-refresh_weather()
+if __name__ != "__main__":
+    gunicorn_logger = logging.getLogger("gunicorn.error")
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
+    # Ensure weather is gathered when initialised
+    refresh_weather()

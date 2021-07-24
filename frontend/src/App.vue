@@ -5,6 +5,9 @@
         <div v-if="gotData">
             <Map class=" item-main" :locations="locations" :viewDate="viewDate" :overlay="overlay" />
         </div>
+        <div>
+            <Modal title="Error" text="Weather data could not be fetched. Please try again shortly" />
+        </div>
         <Footer class="" />
     </div>
 </template>
@@ -57,9 +60,11 @@
             },
         },
         mounted: function() {
-            this.getLocationPromise().then(result => {
-                this.locations = result
-                this.gotData = true
+            this.$nextTick(function() {
+                this.getLocationPromise().then(result => {
+                    this.locations = result
+                    this.gotData = true
+                })
             })
         }
     };
@@ -79,7 +84,7 @@
         align-items: stretch;
         align-content: stretch;
         flex-direction: column;
-        justify-content: space-evenly;
+        justify-content: flex-start;
 
     }
 

@@ -14,5 +14,5 @@ RUN poetry config virtualenvs.create false
 RUN poetry install --no-dev
 
 
-CMD ["gunicorn", "-w", "3", "-b", ":5000", "-t", "360", "--reload", "wsgi:app"]
+CMD ["gunicorn", "-w", "1", "-b", ":5000", "-t", "360", "--reload", "--log-level=info","wsgi:app"]
 
