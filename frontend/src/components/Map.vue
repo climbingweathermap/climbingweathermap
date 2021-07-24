@@ -7,7 +7,9 @@
                 <l-icon :icon-url="location.weather[viewDateIso].icon" :icon-size="iconSize" />
                 <l-popup>
                     <div class="popup center">
-                        <h4 :href="location.url">{{location.name}}</h4>
+                        <h4>
+                            <a :href="location.url">{{location.name}}</a>
+                        </h4>
                         <img :src="getRainIcon(location)" />
                         <br>
                         <br>
@@ -31,7 +33,9 @@
                 <l-icon :icon-size="iconSize" :icon-url="getRainIcon(location)" />
                 <l-popup>
                     <div class="popup center">
-                        <h4 :href="location.url">{{location.name}}</h4>
+                        <h4>
+                            <a :href="location.url">{{location.name}}</a>
+                        </h4>
                         <img :src="location.weather[viewDateIso].icon">
                         <br>
                         <div>
@@ -54,7 +58,9 @@
                 <l-icon :icon-size="iconSize" />
                 <l-popup>
                     <div class="popup center">
-                        <h4 :href="location.url">{{location.name}}</h4>
+                        <h4>
+                            <a :href="location.url">{{location.name}}</a>
+                        </h4>
                         <img :src="location.weather[viewDateIso].icon">
                         <br>
                         <img :src="getRainIcon(location)" />

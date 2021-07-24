@@ -6,8 +6,7 @@ test:
 	docker-compose up
 
 deploy:
-	git add .
-	eb deploy --staged
+	eb deploy
 
 
 
