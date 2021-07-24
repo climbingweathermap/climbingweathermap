@@ -8,6 +8,7 @@
         <div v-else>
             <Modal title="Error" text="Weather data could not be fetched. Please try again shortly" />
         </div>
+    </div>
 </template>
 
 <script>
