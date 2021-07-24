@@ -5,8 +5,8 @@ import os
 import glob
 
 locations = {}
-sourcepath = ".\\weathermap\\tools"
-outpath = ".\\instance\\locations.json"
+sourcepath = ".\\tools"
+outpath = ".\\data\\locations.json"
 
 data_files = glob.glob(f"{sourcepath}/*.jsonlines")
 
