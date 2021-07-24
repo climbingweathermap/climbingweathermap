@@ -8,6 +8,7 @@
 </template>
 
 <script>
+    // ☐ add error modal when cant connect to server
     import Modal from './components/Modal.vue'
     import NavBar from './components/NavBar.vue'
     import Footer from './components/Footer.vue'
