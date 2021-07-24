@@ -24,9 +24,14 @@ WEATHER_KEY = "weatherapi_key"
 WEATHER_API = "https://api.weatherapi.com/v1"
 LOCATIONS = "./data/locations.json"
 
-CACHE_DEFAULT_TIMEOUT = 3600
-CACHE_TYPE = 'SimpleCache'
-REFRESH_MINUTES = 20
+CACHE_TYPE = 'RedisCache'
+CACHE_REDIS_PORT=6379
+CACHE_REDIS_HOST='redis'
+CACHE_REDIS_DB=0
+CACHE_REDIS_URL=redis://redis:6379/0
+CACHE_DEFAULT_TIMEOUT= 3600
+
+REFRESH_MINUTES = 60
 
 """
 
