@@ -1,13 +1,13 @@
 <template>
-    <div class="content  vh-100">
-        <NavBar class="" />
-        <div v-if="gotData">
+    <div v-if="gotData">
+        <div class="content  vh-100">
+            <NavBar class="" />
             <Options class="" @dateChanged="onDateChange" @overlayChanged="onOverlayChange" :startDate="Date.parse(Object.keys(locations[0].weather)[0])" :endDate="Date.parse(Object.keys(locations[0].weather).slice(-1)[0] )" />
             <Map class=" item-main" :locations="locations" :viewDate="viewDate" :overlay="overlay" />
         </div>
-        <div v-else>
-            <Modal title="Error" text="Weather data could not be fetched. Please try again shortly" />
-        </div>
+    </div>
+    <div v-else>
+        <Modal title="Error" text="Weather data could not be fetched. Please try again shortly" />
     </div>
 </template>
 
