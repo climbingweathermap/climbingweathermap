@@ -93,11 +93,6 @@ def refresh_weather():
     cache.set("weather", weather)
 
 
-@app.route("/")
-def root():
-    return jsonify("WeatherMap")
-
-
 @app.route("/api/v1/locations", methods=["GET"])
 @cache.cached()
 def all_locations():
@@ -107,8 +102,7 @@ def all_locations():
 
     # if weather isn't in cache then gather
     if weather is None:
-        refresh_weather()
-        weather = cache.get("weather")
+        return jsonify([])
 
     # jsonify everything into one response
     return jsonify([loc.to_json() for loc in weather])

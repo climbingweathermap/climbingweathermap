@@ -49,7 +49,7 @@
                 this.overlay = overlay
             },
             getLocationPromise: function() {
-                const path = 'http://localhost:5000/api/v1/locations'
+                const path = "http://backend:5000/api/v1/locations"
                 return axios({
                         url: path,
                         method: 'get',
