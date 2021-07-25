@@ -3,7 +3,7 @@ import requests
 import logging
 from datetime import datetime
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, Response
 from flask_cors import CORS
 from flask_caching import Cache
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -102,7 +102,7 @@ def all_locations():
 
     # if weather isn't in cache then gather
     if weather is None:
-        return jsonify([])
+        return Response(status=500)
 
     # jsonify everything into one response
     return jsonify([loc.to_json() for loc in weather])
@@ -112,3 +112,4 @@ if __name__ != "__main__":
     gunicorn_logger = logging.getLogger("gunicorn.error")
     app.logger.handlers = gunicorn_logger.handlers
     app.logger.setLevel(gunicorn_logger.level)
+    refresh_weather()

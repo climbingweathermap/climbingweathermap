@@ -49,7 +49,7 @@
                 this.overlay = overlay
             },
             getLocationPromise: function() {
-                const path = "http://backend:5000/api/v1/locations"
+                const path = "https://climbing-weather-map.com/api/v1/locations"
                 return axios({
                         url: path,
                         method: 'get',
@@ -61,7 +61,9 @@
         mounted: function() {
             this.getLocationPromise().then(result => {
                 this.locations = result
-                this.gotData = true
+                if (result) {
+                    this.gotData = true
+                }
             })
         }
     };
