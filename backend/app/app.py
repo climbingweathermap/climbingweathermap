@@ -106,7 +106,7 @@ def all_locations():
 
     # jsonify everything into one response
     response = jsonify([loc.to_json() for loc in weather])
-    print(response)
+
     return response
 
 

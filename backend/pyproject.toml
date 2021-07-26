@@ -18,7 +18,6 @@ rich = "^10.6.0"
 python-dotenv = "0.17.1"
 gunicorn = "^20.1.0"
 redis = "^3.5.3"
-jsonlines = "^2.0.0"
 
 [tool.poetry.dev-dependencies]
 

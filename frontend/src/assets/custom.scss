@@ -6,6 +6,8 @@ $warning:#FDE74C;
 $danger:#F18F01;
 $light:#F6F7F8;
 $dark: #011627;
+$dark2: rgba($dark, 0.75);
+
 
 $theme-colors: ("primary": $primary,
 "secondary": $secondary,
@@ -14,8 +16,8 @@ $theme-colors: ("primary": $primary,
 "warning": $warning,
 "danger": $danger,
 "light": $light,
-"dark": $dark);
-
+"dark": $dark,
+"dark2": $dark2);
 
 .sliders-secondary {
     --slider-connect-bg: #{$secondary};

@@ -4,21 +4,20 @@
             <l-tile-layer url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png' attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' subdomains='abcd'>
             </l-tile-layer>
             <l-marker v-for='(location, index) in locations' :key="index" :lat-lng='location.loc'>
-                <l-icon :icon-url="location.weather[viewDate].icon" :icon-size="iconSize" />
+                <l-icon>
+                    <Icon :title="location.name" :summaryIcon="location.weather[viewDate].icon" :rainIcon="getRainIcon(location)" :temp="location.weather[viewDate].temp" />
+                </l-icon>
                 <l-popup>
-                    <div class="popup center">
+                    <div class="popup center bg-light">
                         <h4>
                             <a :href="location.url">{{location.name}}</a>
                         </h4>
-                        <img :src="getRainIcon(location)" />
-                        <br>
-                        <br>
                         <div>
                             {{location.weather[viewDate].text}} on {{formatDate(viewDate)}} </div>
                         <div>
                             Humidity:{{location.weather[viewDate].humidity}}% </div>
                         <div>
-                            Temperature: {{location.weather[viewDate].min_temp}} / {{location.weather[viewDate].max_temp}} °C
+                            Temperature: {{location.weather[viewDate].min_temp}} -> {{location.weather[viewDate].max_temp}} °C
                         </div>
                         <div>
                             Rain: {{location.weather[viewDate].rain_perc}}% = {{location.weather[viewDate].rain}} mm
@@ -35,6 +34,7 @@
 
 <script>
     import "leaflet/dist/leaflet.css";
+    import Icon from './Icon.vue'
     import {
         LMap,
         LTileLayer,
@@ -50,7 +50,8 @@
             LTileLayer,
             LMarker,
             LPopup,
-            LIcon
+            LIcon,
+            Icon
         },
         props: {
             locations: Array,

@@ -13,5 +13,6 @@
     .footer {
         text-align: center;
         width: 100vw;
+        line-height: 10px
     }
 </style>

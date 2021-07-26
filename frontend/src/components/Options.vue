@@ -1,11 +1,11 @@
 <template>
     <div class="my-options-bar">
         <Slider class="sliders-secondary date-slider" v-model="viewDate" :min="0" :max="nDays" :format="formatDate" @update="dateChanged" />
+    </div>
 </template>
 
 <script>
     import Slider from '@vueform/slider'
-    import Dropdown from './Dropdown.vue'
     export default {
         name: "Options",
         props: {
@@ -14,7 +14,6 @@
         },
         components: {
             Slider,
-            Dropdown
         },
         // 1000 = 1s
         data: function() {

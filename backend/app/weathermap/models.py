@@ -73,6 +73,7 @@ class Location:
                     "icon": f"http://openweathermap.org/img/wn/{day['weather'][0]['icon']}@2x.png",
                     "min_temp": day["temp"]["min"],
                     "max_temp": day["temp"]["max"],
+                    "temp": day["temp"]["day"],
                     "humidty": day["humidity"],
                     "rain_perc": day["pop"],
                     "rain": rain,
