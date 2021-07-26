@@ -1,8 +1,6 @@
 <template>
     <div class="my-options-bar">
         <Slider class="sliders-secondary date-slider" v-model="viewDate" :min="0" :max="nDays" :format="formatDate" @update="dateChanged" />
-<Dropdown class="overlay-dropdown" title="Change Overlay" defaultOption="Summary" :options="overlays" @setSelectedOption="changeOverlay" />
-    </div>
 </template>
 
 <script>
@@ -23,7 +21,6 @@
             return {
                 day: (1000 * 3600 * 24),
                 viewDate: 0,
-                overlays: ["Summary", "Rain", "Temperature"]
             }
         },
         methods: {
@@ -39,9 +36,6 @@
             dateChanged: function() {
                 this.$emit("dateChanged", this.viewDate)
             },
-            changeOverlay: function(selectedOption) {
-                this.$emit("overlayChanged", selectedOption)
-            }
         },
         mounted: function() {
             this.$emit("dateChanged", this.viewDate)

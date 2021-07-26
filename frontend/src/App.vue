@@ -2,8 +2,8 @@
     <div v-if="gotData">
         <div class="content vh-100">
             <NavBar />
-            <Options @dateChanged="onDateChange" @overlayChanged="onOverlayChange" :startDate="locations[0].weather['0'].dt" :nDays="locations[0].weather.length" />
-            <Map class=" item-main" :locations="locations" :viewDate="parseInt(viewDate)" :overlay="overlay" :startDate="locations[0].weather['0'].dt" />
+            <Options @dateChanged="onDateChange" :startDate="locations[0].weather['0'].dt" :nDays="locations[0].weather.length" />
+            <Map class=" item-main" :locations="locations" :viewDate="parseInt(viewDate)" :startDate="locations[0].weather['0'].dt" />
             <Footer />
         </div>
     </div>
@@ -40,9 +40,6 @@
         methods: {
             onDateChange: function(viewDate) {
                 this.viewDate = viewDate
-            },
-            onOverlayChange: function(overlay) {
-                this.overlay = overlay
             },
             getLocationPromise: function() {
                 const path = process.env.VUE_APP_BACKEND_ADDRESS
