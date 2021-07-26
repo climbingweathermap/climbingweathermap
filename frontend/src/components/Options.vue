@@ -1,7 +1,7 @@
 <template>
     <div class="my-options-bar">
-        <Slider class="sliders-secondary date-slider" v-model="viewDate" :min="startDate" :max="endDate" :format="formatDate" :step="day" @update="dateChanged" />
-        <Dropdown class="overlay-dropdown" title="Change Overlay" defaultOption="Summary" :options="overlays" @setSelectedOption="changeOverlay" />
+        <Slider class="sliders-secondary date-slider" v-model="viewDate" :min="0" :max="nDays" :format="formatDate" @update="dateChanged" />
+<Dropdown class="overlay-dropdown" title="Change Overlay" defaultOption="Summary" :options="overlays" @setSelectedOption="changeOverlay" />
     </div>
 </template>
 
@@ -10,7 +10,10 @@
     import Dropdown from './Dropdown.vue'
     export default {
         name: "Options",
-        props: ['startDate', 'endDate'],
+        props: {
+            'startDate': Number,
+            'nDays': Number
+        },
         components: {
             Slider,
             Dropdown
@@ -24,13 +27,14 @@
             }
         },
         methods: {
-            formatDate: (value) => {
+            formatDate: function(value) {
                 const options = {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
                 };
-                return new Date(value).toLocaleDateString(undefined, options)
+                var unixDate = 1000 * (this.startDate) + (value * this.day)
+                return new Date(unixDate).toLocaleDateString(undefined, options)
             },
             dateChanged: function() {
                 this.$emit("dateChanged", this.viewDate)
@@ -40,7 +44,6 @@
             }
         },
         mounted: function() {
-            this.viewDate = this.startDate
             this.$emit("dateChanged", this.viewDate)
         },
     }

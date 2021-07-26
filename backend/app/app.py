@@ -96,16 +96,18 @@ def refresh_weather():
 @app.route("/api/v1/locations", methods=["GET"])
 @cache.cached()
 def all_locations():
-    """v1 api to get location"""
+    """v1 api to get location used caching"""
 
     weather = cache.get("weather")
 
-    # if weather isn't in cache then gather
+    # if weather isn't in cache then return error code
     if weather is None:
         return Response(status=500)
 
     # jsonify everything into one response
-    return jsonify([loc.to_json() for loc in weather])
+    response = jsonify([loc.to_json() for loc in weather])
+    print(response)
+    return response
 
 
 if __name__ != "__main__":

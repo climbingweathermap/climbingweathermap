@@ -7,6 +7,7 @@ load_dotenv()
 SECRET_KEY = environ.get("SECRET_KEY")
 
 WEATHER_API = environ.get("WEATHER_API")
+VUE_APP_WEATHER_KEY = environ.get("VUE_APP_WEATHER_KEY")
 WEATHER_KEY = environ.get("WEATHER_KEY")
 
 LOCATIONS = environ.get("LOCATIONS")

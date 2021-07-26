@@ -1,10 +1,10 @@
 <template>
     <div v-if="gotData">
-        <div class="content  vh-100">
-            <NavBar class="" />
-            <Options class="" @dateChanged="onDateChange" @overlayChanged="onOverlayChange" :startDate="Date.parse(Object.keys(locations[0].weather)[0])" :endDate="Date.parse(Object.keys(locations[0].weather).slice(-1)[0] )" />
-            <Map class=" item-main" :locations="locations" :viewDate="viewDate" :overlay="overlay" />
-            <Footer class="" />
+        <div class="content vh-100">
+            <NavBar />
+            <Options @dateChanged="onDateChange" @overlayChanged="onOverlayChange" :startDate="locations[0].weather['0'].dt" :nDays="locations[0].weather.length" />
+            <Map class=" item-main" :locations="locations" :viewDate="parseInt(viewDate)" :overlay="overlay" :startDate="locations[0].weather['0'].dt" />
+            <Footer />
         </div>
     </div>
     <div v-else>
@@ -34,22 +34,18 @@
                 viewDate: '',
                 overlay: '',
                 gotData: false,
+                apiKey: '',
             }
         },
         methods: {
             onDateChange: function(viewDate) {
-                const options = {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                };
-                this.viewDate = new Date(viewDate).toLocaleDateString(undefined, options)
+                this.viewDate = viewDate
             },
             onOverlayChange: function(overlay) {
                 this.overlay = overlay
             },
             getLocationPromise: function() {
-                const path = "https://climbing-weather-map.com/api/v1/locations"
+                const path = process.env.VUE_APP_BACKEND_ADDRESS
                 return axios({
                         url: path,
                         method: 'get',
@@ -60,12 +56,12 @@
         },
         mounted: function() {
             this.getLocationPromise().then(result => {
-                this.locations = result
                 if (result) {
+                    this.locations = result
                     this.gotData = true
                 }
             })
-        }
+        },
     };
 </script>
 

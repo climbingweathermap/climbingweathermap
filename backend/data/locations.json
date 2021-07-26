@@ -1,4 +1,10 @@
 {
+    "Rocky Butte":
+    {
+        "lat": 45.55,
+        "long": -122.565,
+        "url": "https://www.mountainproject.com/area/105788995/rocky-butte"
+    },
     "Area 51":
     {
         "lat": 45.348,

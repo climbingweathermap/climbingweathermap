@@ -19,6 +19,7 @@
         "bootstrap": "^5.0.0-beta3",
         "core-js": "^3.6.5",
         "dateformat": "^4.5.1",
+        "dotenv": "^10.0.0",
         "leaflet": "^1.7.1",
         "vue": "^3.0.0"
     },
