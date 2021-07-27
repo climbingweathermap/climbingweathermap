@@ -8,7 +8,6 @@ COPY . .
 
 RUN npm run compile:sass
 RUN npm run build
-RUN export VUE_APP_BACKEND_ADDRESS=$(echo "$(cut -d'=' -f2 <<< $(grep VUE_APP_BACKEND_ADDRESS .env))")
 
 # production stage
 FROM nginx:stable-alpine as production-stage
