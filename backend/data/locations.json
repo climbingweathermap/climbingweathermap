@@ -59,6 +59,18 @@
         "long": -121.097,
         "url": "https://www.mountainproject.com/area/105817451/horsethief-butte"
     },
+    "Hunchback Wall":
+    {
+        "lat": 45.333,
+        "long": -121.948,
+        "url": "https://www.mountainproject.com/area/118591753/hunchback-wall"
+    },
+    "Index":
+    {
+        "lat": 47.825,
+        "long": -121.562,
+        "url": "https://www.mountainproject.com/area/105790635/index"
+    },
     "Klinger Springs":
     {
         "lat": 45.41,
@@ -77,6 +89,12 @@
         "long": -122.458,
         "url": "https://www.mountainproject.com/area/105789273/madrone-wall"
     },
+    "Mazama":
+    {
+        "lat": 48.593,
+        "long": -120.406,
+        "url": "https://www.mountainproject.com/area/106112166/mazama"
+    },
     "OH8":
     {
         "lat": 45.711,
@@ -94,6 +112,18 @@
         "lat": 45.575,
         "long": -122.138,
         "url": "https://www.mountainproject.com/area/105878082/rat-cave"
+    },
+    "Red River Gorge":
+    {
+        "lat": 37.456,
+        "long": -83.794,
+        "url": "https://www.mountainproject.com/area/105841134/red-river-gorge"
+    },
+    "Red Rock":
+    {
+        "lat": 36.131,
+        "long": -115.425,
+        "url": "https://www.mountainproject.com/area/105731932/red-rock"
     },
     "Rocky Butte":
     {
@@ -118,6 +148,18 @@
         "lat": 45.458,
         "long": -118.236,
         "url": "https://www.mountainproject.com/area/106735075/spring-mountain"
+    },
+    "Squamish":
+    {
+        "lat": 49.68,
+        "long": -123.154,
+        "url": "https://www.mountainproject.com/area/105798170/squamish"
+    },
+    "Tieton River":
+    {
+        "lat": 46.684,
+        "long": -120.958,
+        "url": "https://www.mountainproject.com/area/105921237/tieton-river"
     },
     "Trillium Lake Crag":
     {
@@ -149,10 +191,10 @@
         "long": -121.757,
         "url": "https://www.mountainproject.com/area/109270123/windy-slab"
     },
-    "Hunchback Wall":
+    "Yosemite Valley":
     {
-        "lat": 45.333,
-        "long": -121.948,
-        "url": "https://www.mountainproject.com/area/118591753/hunchback-wall"
+        "lat": 37.723,
+        "long": -119.635,
+        "url": "https://www.mountainproject.com/area/105833388/yosemite-valley"
     }
 }
