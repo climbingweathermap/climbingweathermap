@@ -1,14 +1,14 @@
 <template>
     <div>
-        <l-map style="height:100%" @ready="onReady">
+        <l-map style="height:100%" @ready="onReady" v-model:zoom="zoom">
             <l-tile-layer url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png' attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' subdomains='abcd'>
             </l-tile-layer>
             <l-marker v-for='(location, index) in locations' :key="index" :lat-lng='location.loc'>
                 <l-icon>
-                    <Icon :title="location.name" :summaryIcon="location.weather[viewDate].icon" :rainIcon="getRainIcon(location)" :temp="location.weather[viewDate].temp" />
+                    <Icon :title="location.name" :summaryIcon="location.weather[viewDate].icon" :rainIcon="getRainIcon(location)" :temp="location.weather[viewDate].temp" :zoom="zoom" />
                 </l-icon>
                 <l-popup>
-                    <div class="popup center bg-light">
+                    <div class=" popup center bg-light">
                         <h4>
                             <a :href="location.url">{{location.name}}</a>
                         </h4>
@@ -40,7 +40,7 @@
         LTileLayer,
         LMarker,
         LPopup,
-        LIcon
+        LIcon,
     } from "@vue-leaflet/vue-leaflet";
     import dateformat from "dateformat"
     export default {
@@ -51,7 +51,7 @@
             LMarker,
             LPopup,
             LIcon,
-            Icon
+            Icon,
         },
         props: {
             locations: Array,
@@ -65,6 +65,7 @@
                 iconHeight: 64,
                 layer: "temp_new",
                 day: (1000 * 24 * 60 * 60),
+                zoom: 2,
             }
         },
         computed: {
@@ -79,11 +80,13 @@
             onReady: (mapObject) => {
                 mapObject.locate({
                     setView: true,
-                    maxZoom: 10
+                    maxZoom: 15
                 })
             },
             getRainIcon: function(location) {
-                return this.rain_icon[location.weather. [this.viewDate].rain_score]
+                iconPath = this.rain_icon[location.weather[this.viewDate].rain_score]
+                console.log(iconPath)
+                return iconPath
             },
             formatDate: function(value) {
                 const options = {

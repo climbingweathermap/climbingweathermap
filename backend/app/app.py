@@ -90,6 +90,7 @@ def refresh_weather():
     app.logger.info("Getting Weather...")
     weather = get_weather(get_locations())
     app.logger.info("Weather Collected")
+    cache.delete("weather")
     cache.set("weather", weather)
 
 
@@ -116,4 +117,5 @@ if __name__ != "__main__":
     gunicorn_logger = logging.getLogger("gunicorn.error")
     app.logger.handlers = gunicorn_logger.handlers
     app.logger.setLevel(gunicorn_logger.level)
+    cache.clear()
     refresh_weather()

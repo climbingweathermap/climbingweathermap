@@ -9,7 +9,7 @@
         <div>
             <p>{{temp.toFixed(1)}}</p>
         </div>
-        <div>
+        <div v-if="largeIcon">
             <p>{{title}}</p>
         </div>
     </div>
@@ -23,11 +23,17 @@
             summaryIcon: String,
             rainIcon: String,
             temp: Number,
+            zoom: Number
         },
         methods: {
             toFixed: (value, precision) => {
                 var power = Math.pow(10, precision || 0);
                 return String(Math.round(value * power) / power);
+            }
+        },
+        computed: {
+            largeIcon() {
+                return (this.zoom > 10)
             }
         },
     }

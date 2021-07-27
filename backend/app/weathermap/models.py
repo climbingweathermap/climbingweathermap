@@ -1,8 +1,7 @@
 """ Weathermap data models """
 import requests
 import json
-from datetime import date, timedelta
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class Location:
@@ -27,6 +26,23 @@ class Location:
                 "units": "metric",
             }
             self.forecast = requests.get(API_URL, params=keys).json()
+
+            keys = {
+                "lat": self.loc[0],
+                "lon": self.loc[1],
+                "appid": API_KEY,
+                "units": "metric",
+                "dt": round(
+                    datetime.timestamp(
+                        datetime.fromtimestamp(self.forecast["daily"][0]["dt"])
+                        - timedelta(days=2)
+                    )
+                ),
+            }
+            self.history = requests.get(
+                f"{API_URL}/timemachine", params=keys
+            ).json()
+
         except json.decoder.JSONDecodeError as e:
             raise e
         except requests.exceptions.ConnectionError as e:
@@ -35,28 +51,29 @@ class Location:
         """Summarise weather
 
         Returns JSON like:
-        {
-            2021-07-19:
+        [
+            1627156800:
             {
+                dt: 1627156800
                 text: "Cloudy"
                 icon: "//xyz.png"
-                rain_last_2_day(mm): 40
-                min_temp_c:15
-                max_temp_c:31
+                rain: 0.5
+                rain_last_2_day: 10.2
+                min_temp:15
+                max_temp:31
                 humidity: "14"
                 rain_perc: "21"
             },
-            2021-07-20
             {
                 ...
             }
-        }
+        ]
 
         """
 
         self.weather = []
 
-        rain_score_lookup = [0.2, 0.5, 1]
+        rain_score_lookup = [0.1, 0.4, 1]
 
         for day in self.forecast["daily"]:
             try:
@@ -65,9 +82,29 @@ class Location:
             except KeyError:
                 rain = 0
 
+            dt = day["dt"]
+            start_dt = round(
+                datetime.timestamp(
+                    datetime.fromtimestamp(dt) - timedelta(days=2)
+                )
+            )
+
+            rain_last_2_day = self.get_precip([start_dt, dt])
+
+            total_rain = rain + rain_last_2_day
+
+        try:
+            rain_score = list(
+                map(lambda i: i > total_rain, rain_score_lookup)
+            ).index(True)
+        except ValueError:
+            rain_score = 3  # out of limit of the lookup table
+
+            print(rain_score)
+
             self.weather.append(
                 {
-                    "dt": day["dt"],
+                    "dt": dt,
                     "text": day["weather"][0]["description"],
                     "icon": f"https://openweathermap.org/img/wn/{day['weather'][0]['icon']}@2x.png",
                     "min_temp": day["temp"]["min"],
@@ -76,48 +113,20 @@ class Location:
                     "humidty": day["humidity"],
                     "rain_perc": day["pop"],
                     "rain": rain,
-                    "rain_last_2_day": 0,
-                    "rain_score": rain_score_lookup[0],
+                    "rain_last_2_day": rain_last_2_day,
+                    "rain_score": rain_score,
                 }
             )
 
-        # rain_last_2_day = self.get_precip([day_1, day_2])
+    def get_precip(self, dt_range):
+        """Get the rain fall during a given range of dt.
 
-        # total_rain = (
-        #     api_day["day"]["totalprecip_mm"] + rain_last_2_day
-        # )
+        [start_dt, end_dt]
 
-        # try:
-        #     rain_score = list(
-        #         map(lambda i: i > total_rain, rain_score_lookup)
-        #     ).index(True)
-        # except ValueError:
-        #     rain_score = 3  # out of limit of the lookup table
-
-    def get_precip(self, days):
-        """Get the rain fall on a given day (in mm) or list of days.
-
-        day must be formatted as yyyy-mm-dd
         """
 
-        # ensure its a list
-        if not isinstance(days, list):
-            days = [days]
-
-        rain_mm = 0
-
-        for day in days:
-            # Select correct date from History api response
-            for api_day in self.history["forecast"]["forecastday"]:
-                if api_day["date"] == day:
-                    rain_mm += float(api_day["day"]["totalprecip_mm"])
-
-            # check for correct date in forecast api
-            for api_day in self.forecast["forecast"]["forecastday"]:
-                if api_day["date"] == day:
-                    rain_mm += float(api_day["day"]["totalprecip_mm"])
-
-        return rain_mm
+        rain = 0
+        return rain
 
     def to_json(self):
         """Return JSON version of object"""
