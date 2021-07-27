@@ -1,7 +1,6 @@
 """ Weathermap data models """
 import requests
 import json
-import logging
 from datetime import date, timedelta
 from datetime import datetime
 
