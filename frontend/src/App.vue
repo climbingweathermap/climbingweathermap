@@ -43,6 +43,7 @@
             },
             getLocationPromise: function() {
                 const path = process.env.VUE_APP_BACKEND_ADDRESS
+                console.log(path)
                 return axios({
                         url: path,
                         method: 'get',

@@ -102,7 +102,9 @@ def all_locations():
 
     # if weather isn't in cache then return error code
     if weather is None:
-        return Response(status=500)
+        return Response(
+            response="Weather Data not available in Cache", status=500
+        )
 
     # jsonify everything into one response
     response = jsonify([loc.to_json() for loc in weather])
