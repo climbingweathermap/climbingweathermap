@@ -65,7 +65,7 @@
                 iconHeight: 64,
                 layer: "temp_new",
                 day: (1000 * 24 * 60 * 60),
-                zoom: 6,
+                zoom: 1,
             }
         },
         computed: {
