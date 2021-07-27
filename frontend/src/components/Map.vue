@@ -3,7 +3,7 @@
         <l-map style="height:100%" @ready="onReady" v-model:zoom="zoom">
             <l-tile-layer url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png' attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' subdomains='abcd'>
             </l-tile-layer>
-            <l-marker class="center" v-for='(location, index) in locations' :key="index" :lat-lng='location.loc'>
+            <l-marker v-for='(location, index) in locations' :key="index" :lat-lng='location.loc'>
                 <l-icon>
                     <Icon :title="location.name" :summaryIcon="location.weather[viewDate].icon" :rainIcon="getRainIcon(location)" :temp="location.weather[viewDate].temp" :zoom="zoom" />
                 </l-icon>
@@ -15,7 +15,7 @@
                         <div>
                             {{location.weather[viewDate].text}} on {{formatDate(viewDate)}} </div>
                         <div>
-                            Humidity:{{location.weather[viewDate].humidity}}% </div>
+                            Humidity: {{location.weather[viewDate].humidity}}% </div>
                         <div>
                             Temperature: {{location.weather[viewDate].min_temp}} -> {{location.weather[viewDate].max_temp}} °C
                         </div>
