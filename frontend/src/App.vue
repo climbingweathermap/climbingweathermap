@@ -47,8 +47,6 @@
                 } else {
                     var path = "http://localhost:5000/api/v1/locations"
                 }
-                console.log(path)
-                console.log(process.env)
                 return axios({
                         url: path,
                         method: 'get',

@@ -70,7 +70,7 @@ class Location:
                 {
                     "dt": day["dt"],
                     "text": day["weather"][0]["description"],
-                    "icon": f"http://openweathermap.org/img/wn/{day['weather'][0]['icon']}@2x.png",
+                    "icon": f"https://openweathermap.org/img/wn/{day['weather'][0]['icon']}@2x.png",
                     "min_temp": day["temp"]["min"],
                     "max_temp": day["temp"]["max"],
                     "temp": day["temp"]["day"],

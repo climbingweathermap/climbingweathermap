@@ -7,6 +7,7 @@ RUN npm install --production=false
 COPY . .
 
 RUN npm run compile:sass
+# RUN npm run builddev 
 RUN npm run build
 
 # production stage
