@@ -2,8 +2,8 @@
     <div v-if="gotData">
         <div class="content vh-100">
             <NavBar />
-            <Options @dateChanged="onDateChange" :startDate="locations[0].weather['0'].dt" :nDays="locations[0].weather.length-1" />
-            <Map class=" item-main" :locations="locations" :viewDate="parseInt(viewDate)" :startDate="locations[0].weather['0'].dt" />
+            <Options @dateChanged="onDateChange" :startDate="locations[0].weather[0].dt" :nDays="locations[0].weather.length-1" />
+            <Map class=" item-main" :locations="locations" :viewDate="parseInt(viewDate)" :startDate="locations[0].weather[0].dt" />
             <Footer />
         </div>
     </div>

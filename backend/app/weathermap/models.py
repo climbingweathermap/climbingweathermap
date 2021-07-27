@@ -93,14 +93,12 @@ class Location:
 
             total_rain = rain + rain_last_2_day
 
-        try:
-            rain_score = list(
-                map(lambda i: i > total_rain, rain_score_lookup)
-            ).index(True)
-        except ValueError:
-            rain_score = 3  # out of limit of the lookup table
-
-            print(rain_score)
+            try:
+                rain_score = list(
+                    map(lambda i: i > total_rain, rain_score_lookup)
+                ).index(True)
+            except ValueError:
+                rain_score = 3  # out of limit of the lookup table
 
             self.weather.append(
                 {

@@ -3,7 +3,7 @@
         <l-map style="height:100%" @ready="onReady" v-model:zoom="zoom">
             <l-tile-layer url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png' attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' subdomains='abcd'>
             </l-tile-layer>
-            <l-marker v-for='(location, index) in locations' :key="index" :lat-lng='location.loc'>
+            <l-marker class="center" v-for='(location, index) in locations' :key="index" :lat-lng='location.loc'>
                 <l-icon>
                     <Icon :title="location.name" :summaryIcon="location.weather[viewDate].icon" :rainIcon="getRainIcon(location)" :temp="location.weather[viewDate].temp" :zoom="zoom" />
                 </l-icon>
@@ -65,7 +65,7 @@
                 iconHeight: 64,
                 layer: "temp_new",
                 day: (1000 * 24 * 60 * 60),
-                zoom: 2,
+                zoom: 6,
             }
         },
         computed: {
@@ -84,8 +84,8 @@
                 })
             },
             getRainIcon: function(location) {
-                iconPath = this.rain_icon[location.weather[this.viewDate].rain_score]
-                console.log(iconPath)
+                var index = location.weather[this.viewDate].rain_score
+                var iconPath = this.rain_icon[index]
                 return iconPath
             },
             formatDate: function(value) {
@@ -104,6 +104,7 @@
 <style>
     .center {
         text-align: center;
+        align-items: center;
     }
 
     .popup {
