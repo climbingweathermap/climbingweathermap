@@ -1,10 +1,4 @@
 {
-    "Rocky Butte":
-    {
-        "lat": 45.55,
-        "long": -122.565,
-        "url": "https://www.mountainproject.com/area/105788995/rocky-butte"
-    },
     "Area 51":
     {
         "lat": 45.348,
@@ -35,6 +29,12 @@
         "long": -122.498,
         "url": "https://www.mountainproject.com/area/105812475/carver"
     },
+    "City of Rocks":
+    {
+        "lat": 42.078,
+        "long": -113.724,
+        "url": "https://www.mountainproject.com/area/105739322/city-of-rocks"
+    },
     "Empire Boulders":
     {
         "lat": 45.745,
@@ -47,6 +47,12 @@
         "long": -121.86,
         "url": "https://www.mountainproject.com/area/105788992/frenchs-dome"
     },
+    "Frenchman Coulee":
+    {
+        "lat": 47.025,
+        "long": -119.969,
+        "url": "https://www.mountainproject.com/area/105792231/frenchman-coulee-aka-vantage"
+    },
     "Horsethief Butte":
     {
         "lat": 45.648,
@@ -58,6 +64,12 @@
         "lat": 45.41,
         "long": -121.57,
         "url": "https://www.mountainproject.com/area/109610166/klinger-spring"
+    },
+    "Leavenworth":
+    {
+        "lat": 47.597,
+        "long": -120.659,
+        "url": "https://www.mountainproject.com/area/120379546/leavenworth"
     },
     "Madrone Wall":
     {
@@ -76,6 +88,24 @@
         "lat": 45.567,
         "long": -122.211,
         "url": "https://www.mountainproject.com/area/106164682/ozone"
+    },
+    "Rat Cave":
+    {
+        "lat": 45.55,
+        "long": -122.565,
+        "url": "https://www.mountainproject.com/area/105878082/rat-cave"
+    },
+    "Rocky Butte":
+    {
+        "lat": 45.575,
+        "long": -122.138,
+        "url": "https://www.mountainproject.com/area/105788995/rocky-butte"
+    },
+    "Salmon River Slab":
+    {
+        "lat": 45.291,
+        "long": -121.94,
+        "url": "https://www.mountainproject.com/area/106392750/salmon-river-slab"
     },
     "Smith Rock":
     {
@@ -106,5 +136,23 @@
         "lat": 45.693,
         "long": -121.681,
         "url": "https://www.mountainproject.com/area/116379508/viento-wall"
+    },
+    "Wankers Columns":
+    {
+        "lat": 45.708,
+        "long": -121.39,
+        "url": "https://www.mountainproject.com/area/111188600/wankers-columns"
+    },
+    "Windy Slab":
+    {
+        "lat": 45.703,
+        "long": -121.757,
+        "url": "https://www.mountainproject.com/area/109270123/windy-slab"
+    },
+    "Hunchback Wall":
+    {
+        "lat": 45.333,
+        "long": -121.948,
+        "url": "https://www.mountainproject.com/area/118591753/hunchback-wall"
     }
 }
