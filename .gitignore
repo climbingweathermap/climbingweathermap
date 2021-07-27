@@ -7,6 +7,7 @@ node_modules
 .env.local
 .env.*.local
 .flaskenv
+.env
 
 # Log files
 npm-debug.log*
@@ -138,6 +139,7 @@ tmp/
 .DS_Store
 node_modules
 /dist
+
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
