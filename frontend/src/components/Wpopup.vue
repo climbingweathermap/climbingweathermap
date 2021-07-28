@@ -1,8 +1,5 @@
 <template>
-    <div class=" popup center bg-light">
-        <h4>
-            <a :href="location.url">{{location.name}}</a>
-        </h4>
+    <div class=" popup center">
         <div>
             {{location.weather[viewDate].text}} on {{formatDate(viewDate)}} </div>
         <div>
@@ -21,12 +18,29 @@
 
 <script type="text/javascript">
     export default {
-        name: "Map",
+        name: "Wpopup",
         props: {
-            location: Array,
+            location: Object,
+            viewDate: Number,
+            startDate: Number,
         },
-    }
-</script>
+        data: function() {
+            return {
+                day: (1000 * 24 * 60 * 60),
+            }
+        },
+        methods: {
+            formatDate: function(value) {
+                const options = {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                };
+                var unixDate = 1000 * (this.startDate) + (value * this.day)
+                return new Date(unixDate).toLocaleDateString(undefined, options)
+            },
+        }
+    }</script>
 
 <style type="text/css">
     .center {
@@ -39,5 +53,11 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
+        background: var(--bs-dark2);
+        color: var(--bs-light);
+        padding: 5px;
+        min-width: 200px;
+        overflow: hidden;
+        border-radius: 5px;
     }
 </style>

@@ -7,8 +7,8 @@ RUN npm install --production=false
 COPY . .
 
 RUN npm run compile:sass
-RUN npm run builddev 
-# RUN npm run build
+# RUN npm run builddev 
+RUN npm run build
 
 # production stage
 FROM nginx:stable-alpine as production-stage
