@@ -109,8 +109,8 @@ class Location:
                     "max_temp": day["temp"]["max"],
                     "temp": day["temp"]["day"],
                     "humidity": day["humidity"],
-                    "rain_perc": 100 * day["pop"],
-                    "rain": rain,
+                    "rain_perc": round(100 * day["pop"], 1),
+                    "rain": round(rain, 1),
                     "rain_last_2_day": rain_last_2_day,
                     "rain_score": rain_score,
                 }
@@ -129,7 +129,6 @@ class Location:
         for hour in self.history["hourly"]:
             if dt_range[0] < hour["dt"] < dt_range[1]:
                 try:
-                    print(f"{hour['rain']} is {type(hour['rain'])}")
                     rain += Location.sum_all_rain(hour["rain"])
                 except KeyError:
                     # No rain in the period
@@ -139,7 +138,6 @@ class Location:
         for day in self.forecast["daily"]:
             if dt_range[0] < day["dt"] < dt_range[1]:
                 try:
-                    print(f"{day['rain']} is {type(day['rain'])}")
                     rain += Location.sum_all_rain(day["rain"])
                 except KeyError:
                     # No rain in the period
