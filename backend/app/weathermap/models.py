@@ -109,8 +109,8 @@ class Location:
                     "max_temp": day["temp"]["max"],
                     "temp": day["temp"]["day"],
                     "humidity": day["humidity"],
-                    "rain_perc": 100 * day["pop"],
-                    "rain": rain,
+                    "rain_perc": round(100 * day["pop"], 1),
+                    "rain": round(rain, 1),
                     "rain_last_2_day": rain_last_2_day,
                     "rain_score": rain_score,
                 }
