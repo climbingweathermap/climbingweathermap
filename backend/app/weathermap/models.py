@@ -129,7 +129,6 @@ class Location:
         for hour in self.history["hourly"]:
             if dt_range[0] < hour["dt"] < dt_range[1]:
                 try:
-                    print(f"{hour['rain']} is {type(hour['rain'])}")
                     rain += Location.sum_all_rain(hour["rain"])
                 except KeyError:
                     # No rain in the period
@@ -139,7 +138,6 @@ class Location:
         for day in self.forecast["daily"]:
             if dt_range[0] < day["dt"] < dt_range[1]:
                 try:
-                    print(f"{day['rain']} is {type(day['rain'])}")
                     rain += Location.sum_all_rain(day["rain"])
                 except KeyError:
                     # No rain in the period

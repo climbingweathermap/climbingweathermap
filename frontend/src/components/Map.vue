@@ -7,25 +7,8 @@
                 <l-icon>
                     <Icon :title="location.name" :summaryIcon="location.weather[viewDate].icon" :rainIcon="getRainIcon(location)" :temp="location.weather[viewDate].temp" :zoom="zoom" />
                 </l-icon>
+                <Popup :location="location" :viewDate="viewDate" />
                 <l-popup>
-                    <div class=" popup center bg-light">
-                        <h4>
-                            <a :href="location.url">{{location.name}}</a>
-                        </h4>
-                        <div>
-                            {{location.weather[viewDate].text}} on {{formatDate(viewDate)}} </div>
-                        <div>
-                            Humidity: {{location.weather[viewDate].humidity}}% </div>
-                        <div>
-                            Temperature: {{location.weather[viewDate].min_temp}} -> {{location.weather[viewDate].max_temp}} °C
-                        </div>
-                        <div>
-                            Rain: {{location.weather[viewDate].rain_perc}}% = {{location.weather[viewDate].rain}} mm
-                        </div>
-                        <div>
-                            Rain last 2 days: {{location.weather[viewDate].["rain_last_2_day"]}} mm
-                        </div>
-                    </div>
                 </l-popup>
             </l-marker>
         </l-map>
@@ -35,11 +18,11 @@
 <script>
     import "leaflet/dist/leaflet.css";
     import Icon from './Icon.vue'
+    import Popup from './Popup.vue'
     import {
         LMap,
         LTileLayer,
         LMarker,
-        LPopup,
         LIcon,
     } from "@vue-leaflet/vue-leaflet";
     import dateformat from "dateformat"
@@ -49,9 +32,9 @@
             LMap,
             LTileLayer,
             LMarker,
-            LPopup,
             LIcon,
             Icon,
+            Popup,
         },
         props: {
             locations: Array,
@@ -104,13 +87,6 @@
 <style>
     .center {
         text-align: center;
-        align-items: center;
-    }
-
-    .popup {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
         align-items: center;
     }
 </style>
