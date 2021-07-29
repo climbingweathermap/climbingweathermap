@@ -10,16 +10,13 @@ class Location:
     def __init__(self, ref, data):
         """Climbing Location."""
 
-        print(ref)
-        print(data)
-
         self.ref = ref
         self.name = data["name"]
         self.latlng = [data["lat"], data["long"]]  # list [lat,long]
         self.url = data["url"]
 
-    def to_json(self):
-        """Return JSON version of object"""
+    def to_dict(self):
+        """Return dict version of object"""
         return self.__dict__
 
 
@@ -32,6 +29,7 @@ class Weather:
         self.location = location
         self.history = None
         self.forecast = None
+        self.weather = None
 
     def get_weather(self, API_URL, API_KEY):
         """Retrieve historical and forecast weather
@@ -181,6 +179,11 @@ class Weather:
 
         return rain
 
+    def to_dict(self):
+        """Return dict version of object"""
+
+        return {"weather": self.weather, "location": self.location.to_dict()}
+
     @staticmethod
     def sum_all_rain(rain):
         """Sums up all rain in the response dict from the api call"""
@@ -193,10 +196,6 @@ class Weather:
             total_rain = float(rain)
 
         return total_rain
-
-    def to_json(self):
-        """Return JSON version of object"""
-        return self.__dict__
 
 
 class WeatherAPIError(Exception):

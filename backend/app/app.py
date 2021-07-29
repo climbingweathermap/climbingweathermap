@@ -102,7 +102,7 @@ def all_locations():
     locations = get_locations(app.config["LOCATIONS"])
 
     # jsonify everything into one response
-    response = jsonify([loc.to_json() for loc in locations])
+    response = jsonify([loc.to_dict() for loc in locations])
 
     return response
 
@@ -120,7 +120,7 @@ def all_weather():
         )
 
     # jsonify everything into one response
-    response = jsonify([loc.to_json() for loc in weather])
+    response = jsonify([loc.to_dict() for loc in weather])
 
     return response
 
