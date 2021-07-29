@@ -17,11 +17,10 @@ class Location:
         self.name = data["name"]
         self.latlng = [data["lat"], data["long"]]  # list [lat,long]
         self.url = data["url"]
-        self.weather = None
 
     def to_json(self):
         """Return JSON version of object"""
-        return json.dumps(self.__dict__)
+        return self.__dict__
 
 
 class Weather:
@@ -74,6 +73,7 @@ class Weather:
         ) as e:
             raise WeatherAPIError(e)
 
+        # Empty results list returns error
         if not self.forecast or not self.history:
             raise WeatherAPIError("Unknown")
 
@@ -196,7 +196,7 @@ class Weather:
 
     def to_json(self):
         """Return JSON version of object"""
-        return json.dumps(self.__dict__)
+        return self.__dict__
 
 
 class WeatherAPIError(Exception):

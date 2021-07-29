@@ -1,5 +1,4 @@
 import json
-import requests
 import logging
 from datetime import datetime
 
@@ -9,7 +8,7 @@ from flask_caching import Cache
 from apscheduler.schedulers.background import BackgroundScheduler
 from rich.progress import track
 
-from .weathermap import Location, WeatherAPIError, WeatherNotCollectedError
+from .weathermap import Location, Weather, WeatherAPIError
 
 app = Flask(__name__)
 app.config.from_pyfile("settings.py")
@@ -49,7 +48,6 @@ def get_locations(path_to_locations):
         location_list = json.load(f)
 
     locations = [Location(i, location_list[i]) for i in location_list]
-
     app.logger.info("Locations read")
 
     return locations
@@ -97,7 +95,6 @@ def refresh_weather():
         app.logger.error("Weather could not be gathered")
 
 
-@cache.cached(key_prefix="location", timeout=300)
 @app.route("/api/v1/locations", methods=["GET"])
 def all_locations():
     """v1 api to get location using cache"""
