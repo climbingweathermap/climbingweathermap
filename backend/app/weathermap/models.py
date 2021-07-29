@@ -15,7 +15,6 @@ class Location:
         self.url = data["url"]
 
         # Get Weather Data
-        # https://openweathermap.org/api/one-call-api
 
         try:
             keys = {
@@ -35,7 +34,7 @@ class Location:
                 "dt": round(
                     datetime.timestamp(
                         datetime.fromtimestamp(self.forecast["daily"][0]["dt"])
-                        - timedelta(days=2)
+                        - timedelta(days=3)
                     )
                 ),
             }

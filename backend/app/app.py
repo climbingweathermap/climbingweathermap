@@ -20,7 +20,7 @@ Exampe .env
 
 SECRET_KEY = "sectret_key"
 WEATHER_KEY = "weatherapi_key"
-WEATHER_API = "https://api.weatherapi.com/v1"
+WEATHER_API = "https://api.openweathermap.org/data/2.5/onecall"
 LOCATIONS = "./data/locations.json"
 
 CACHE_TYPE = 'RedisCache'
@@ -28,9 +28,9 @@ CACHE_REDIS_PORT=6379
 CACHE_REDIS_HOST='redis'
 CACHE_REDIS_DB=0
 CACHE_REDIS_URL=redis://redis:6379/0
-CACHE_DEFAULT_TIMEOUT= 3600
+CACHE_DEFAULT_TIMEOUT= 0
 
-REFRESH_MINUTES = 60
+REFRESH_MINUTES = 360
 
 """
 
@@ -76,6 +76,9 @@ def get_weather(locations):
         except requests.exceptions.ConnectionError as e:
             app.logger.error(e)
             app.logger.error(f"failed = {name}")
+        except KeyError as e:
+            app.logger.error(e)
+            app.logger.error(f"failed = {name}")
 
     return weather
 
@@ -89,9 +92,12 @@ def refresh_weather():
     """refresh the cached weather data."""
     app.logger.info("Getting Weather...")
     weather = get_weather(get_locations())
-    app.logger.info("Weather Collected")
-    cache.delete("weather")
-    cache.set("weather", weather)
+    if weather is not None:
+        app.logger.info("Weather Collected")
+        cache.delete("weather")
+        cache.set("weather", weather)
+    else:
+        app.logger.error("Weather could not be gathered")
 
 
 @app.route("/api/v1/locations", methods=["GET"])
