@@ -7,29 +7,57 @@ from datetime import datetime, timedelta
 class Location:
     """Climbing location."""
 
-    def __init__(self, name, data, API_URL, API_KEY):
-        """Get weather data."""
+    def __init__(self, ref, data):
+        """Climbing Location."""
 
-        self.name = name
-        self.loc = [data["lat"], data["long"]]  # list [lat,long]
+        self.ref = ref
+        self.name = data["name"]
+        self.latlng = [data["lat"], data["long"]]  # list [lat,long]
         self.url = data["url"]
 
-        # Get Weather Data
+    def to_dict(self):
+        """Return dict version of object"""
+        return self.__dict__
 
+
+class Weather:
+    """Weather current and forecast at a single location"""
+
+    def __init__(self, location, api_url, api_key, get_weather=False):
+        """Initialise."""
+
+        self.location = location
+        self.history = None
+        self.forecast = None
+        self.weather = None
+
+        self.api_url = api_url
+        self.api_key = api_key
+
+        if get_weather:
+            self.get_weather()
+            self.summarise_weather()
+
+    def get_weather(self):
+        """Retrieve historical and forecast weather
+        from API for a single lcoation."""
+
+        # Current and Forecast
         try:
             keys = {
-                "lat": self.loc[0],
-                "lon": self.loc[1],
-                "appid": API_KEY,
+                "lat": self.location.latlng[0],
+                "lon": self.location.latlng[1],
+                "appid": self.api_key,
                 "exclude": "minutely,hourly,alerts,current",
                 "units": "metric",
             }
-            self.forecast = requests.get(API_URL, params=keys).json()
+            self.forecast = requests.get(self.api_url, params=keys).json()
 
+            # Historical
             keys = {
-                "lat": self.loc[0],
-                "lon": self.loc[1],
-                "appid": API_KEY,
+                "lat": self.location.latlng[0],
+                "lon": self.location.latlng[1],
+                "appid": self.api_key,
                 "units": "metric",
                 "dt": round(
                     datetime.timestamp(
@@ -38,20 +66,28 @@ class Location:
                     )
                 ),
             }
+
             self.history = requests.get(
-                f"{API_URL}/timemachine", params=keys
+                f"{self.api_url}/timemachine", params=keys
             ).json()
 
-        except json.decoder.JSONDecodeError as e:
-            raise e
-        except requests.exceptions.ConnectionError as e:
-            raise e
+        except (
+            json.decoder.JSONDecodeError,
+            requests.exceptions.ConnectionError,
+            KeyError,
+        ) as e:
+            raise WeatherAPIError(e)
 
+        # Empty results list returns error
+        if not self.forecast or not self.history:
+            raise WeatherAPIError("Unknown")
+
+    def summarise_weather(self):
         """Summarise weather
 
         Returns JSON like:
         [
-            1627156800:
+
             {
                 dt: 1627156800
                 text: "Cloudy"
@@ -70,13 +106,16 @@ class Location:
 
         """
 
+        if self.history is None or self.forecast is None:
+            raise WeatherNotCollectedError
+
         self.weather = []
 
         rain_score_lookup = [0.1, 0.4, 1]
 
         for day in self.forecast["daily"]:
             try:
-                # rain is only gieven if > 0
+                # rain is only given if rain > 0
                 rain = day["rain"]
             except KeyError:
                 rain = 0
@@ -122,6 +161,9 @@ class Location:
 
         """
 
+        if self.history is None or self.forecast is None:
+            raise WeatherNotCollectedError
+
         rain = 0
 
         # start with history
@@ -144,6 +186,11 @@ class Location:
 
         return rain
 
+    def to_dict(self):
+        """Return dict version of object"""
+
+        return {"weather": self.weather, "location": self.location.to_dict()}
+
     @staticmethod
     def sum_all_rain(rain):
         """Sums up all rain in the response dict from the api call"""
@@ -157,11 +204,19 @@ class Location:
 
         return total_rain
 
-    def to_json(self):
-        """Return JSON version of object"""
-        return {
-            "name": self.name,
-            "loc": self.loc,
-            "weather": self.weather,
-            "url": self.url,
-        }
+
+class WeatherAPIError(Exception):
+    """Raised when weather api returns and invalid result"""
+
+    def __init__(self, source):
+        self.source = source
+
+    def __str__(self):
+        return f"Source of error: {self.source}"
+
+
+class WeatherNotCollectedError(Exception):
+    """Raised when weather data is needed but not collected"""
+
+    def __str__(self):
+        return "Weather must be collected from the API first"

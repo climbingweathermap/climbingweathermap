@@ -1,5 +1,4 @@
 import json
-import requests
 import logging
 from datetime import datetime
 
@@ -9,7 +8,7 @@ from flask_caching import Cache
 from apscheduler.schedulers.background import BackgroundScheduler
 from rich.progress import track
 
-from .weathermap import Location
+from .weathermap import Location, Weather, WeatherAPIError
 
 app = Flask(__name__)
 app.config.from_pyfile("settings.py")
@@ -41,10 +40,15 @@ scheduler = BackgroundScheduler()
 scheduler.start()
 
 
-def get_locations():
-    """Get locations from open beta dataset in instance folder."""
-    with open(app.config["LOCATIONS"], "r") as f:
-        locations = json.load(f)
+@cache.cached(key_prefix="location", timeout=300)
+def get_locations(path_to_locations):
+    """Get locations from local dataset"""
+
+    with open(path_to_locations, "r") as f:
+        location_list = json.load(f)
+
+    locations = [Location(i, location_list[i]) for i in location_list]
+    app.logger.info("Locations read")
 
     return locations
 
@@ -52,10 +56,9 @@ def get_locations():
 def get_weather(locations):
     """get weather data for locations."""
 
-    # List to hold location objects from model.py
     weather = []
-    for name, location in track(
-        locations.items(),
+    for location in track(
+        locations,
         description=(
             f"[{datetime.now().strftime('%d/%m/%Y %H:%M:%S')}] Getting"
             " Weather..."
@@ -63,22 +66,16 @@ def get_weather(locations):
     ):
         try:
             weather.append(
-                Location(
-                    name,
+                Weather(
                     location,
                     app.config["WEATHER_API"],
                     app.config["WEATHER_KEY"],
+                    get_weather=True,
                 )
             )
-        except json.decoder.JSONDecodeError as e:
+        except WeatherAPIError as e:
             app.logger.error(e)
-            app.logger.error(f"failed = {name}")
-        except requests.exceptions.ConnectionError as e:
-            app.logger.error(e)
-            app.logger.error(f"failed = {name}")
-        except KeyError as e:
-            app.logger.error(e)
-            app.logger.error(f"failed = {name}")
+            app.logger.error(f"Weather API error, failed = {location.name}")
 
     return weather
 
@@ -91,19 +88,31 @@ def get_weather(locations):
 def refresh_weather():
     """refresh the cached weather data."""
     app.logger.info("Getting Weather...")
-    weather = get_weather(get_locations())
-    if weather is not None:
+    locations = get_locations(app.config["LOCATIONS"])
+    weather = get_weather(locations)
+    # Check that at least some weather was gathered.
+    if weather:
         app.logger.info("Weather Collected")
-        cache.delete("weather")
         cache.set("weather", weather)
     else:
         app.logger.error("Weather could not be gathered")
 
 
 @app.route("/api/v1/locations", methods=["GET"])
-@cache.cached()
 def all_locations():
-    """v1 api to get location used caching"""
+    """v1 api to get location using cache"""
+
+    locations = get_locations(app.config["LOCATIONS"])
+
+    # jsonify everything into one response
+    response = jsonify([loc.to_dict() for loc in locations])
+
+    return response
+
+
+@app.route("/api/v1/weather", methods=["GET"])
+def all_weather():
+    """v1 api to get location and weather using cache"""
 
     weather = cache.get("weather")
 
@@ -114,7 +123,7 @@ def all_locations():
         )
 
     # jsonify everything into one response
-    response = jsonify([loc.to_json() for loc in weather])
+    response = jsonify([loc.to_dict() for loc in weather])
 
     return response
 

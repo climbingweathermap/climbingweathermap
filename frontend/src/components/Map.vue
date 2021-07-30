@@ -3,7 +3,7 @@
         <l-map style="height:100%" @ready="onReady" v-model:zoom="zoom">
             <l-tile-layer url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png' attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' subdomains='abcd'>
             </l-tile-layer>
-            <l-marker v-for='(location, index) in locations' :key="index" :lat-lng='location.loc' @click="togglePop(index)" :ref="(el)=>setItemRef(el,index)">
+            <l-marker v-for='(location, index) in weather' :key="index" :lat-lng='location.loc' @click="togglePop(index)" :ref="(el)=>setItemRef(el,index)">
                 <l-icon>
                     <Icon :location="location" :zoom="zoom" :viewDate="viewDate" :startDate="startDate" :ref="(el)=>setIconRef(el,index)" />
                 </l-icon>
@@ -32,7 +32,7 @@
             Icon,
         },
         props: {
-            locations: Array,
+            weather: Array,
             viewDate: Number,
             overlay: String,
             startDate: Number,
