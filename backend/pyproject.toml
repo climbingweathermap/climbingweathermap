@@ -1,9 +1,10 @@
 [tool.poetry]
-name = "weathermap"
+name = "app"
 version = "0.1.0"
 description = "Climbing Weather Map"
-authors = ["fanoway <86997883+fanoway@users.noreply.github.com>"]
+authors = ["Michael Ardron <climbingweathermap@gmail.com>"]
 license = "MIT"
+homepage="https://github.com/climbingweathermap/climbingweathermap"
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -18,8 +19,13 @@ rich = "^10.6.0"
 python-dotenv = "0.17.1"
 gunicorn = "^20.1.0"
 redis = "^3.5.3"
+pytest-cov = "^2.12.1"
 
 [tool.poetry.dev-dependencies]
+tox = "^3.24.0"
+black = "^21.7b0"
+flake8 = "^3.9.2"
+pylint = "^2.9.6"
 
 
 [build-system]
@@ -29,3 +35,25 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 line-length = 79
+
+[tool.tox]
+# tox.ini
+legacy_tox_ini = """
+[tox]
+isolated_build = True
+isolated_build_env = testenv
+envlist = py39
+[tox:.package]
+# note tox will use the same python version as under what tox is installed to package
+# so unless this is python 3 you can require a given python version for the packaging
+# environment via the basepython key
+basepython = python3
+[testenv]
+whitelist_externals = poetry
+commands =
+	poetry run black app/
+	poetry run flake8 app/
+	poetry run pylint app/ --exit-zero
+	poetry run pylint app/ -E
+	poetry run pytest --cov-report term-missing  --cov=app tests/
+"""

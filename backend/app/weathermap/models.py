@@ -9,11 +9,21 @@ class Location:
 
     def __init__(self, ref, data):
         """Climbing Location."""
+        # Check lat and long are valid
 
-        self.ref = ref
-        self.name = data["name"]
-        self.latlng = [data["lat"], data["long"]]  # list [lat,long]
-        self.url = data["url"]
+        try:
+            # list [lat,long]
+            self.latlng = [float(data["lat"]), float(data["long"])]
+        except ValueError:
+            # Invalid input so raise latlng error
+            raise InvalidLatLng([data["lat"], data["long"]])
+
+        if (-90 < self.latlng[0] < 90) and (-180 < self.latlng[1] < 180):
+            self.ref = ref
+            self.name = data["name"]
+            self.url = data["url"]
+        else:
+            raise InvalidLatLng(self.latlng)
 
     def to_dict(self):
         """Return dict version of object"""
@@ -75,8 +85,8 @@ class Weather:
             json.decoder.JSONDecodeError,
             requests.exceptions.ConnectionError,
             KeyError,
-        ) as e:
-            raise WeatherAPIError(e)
+        ) as error:
+            raise WeatherAPIError from error
 
         # Empty results list returns error
         if not self.forecast or not self.history:
@@ -138,11 +148,15 @@ class Weather:
             except ValueError:
                 rain_score = 3  # out of limit of the lookup table
 
+            icon = (
+                "https://openweathermap.org/img/wn/"
+                f"{day['weather'][0]['icon']}@2x.png"
+            )
             self.weather.append(
                 {
                     "dt": dt,
                     "text": day["weather"][0]["description"],
-                    "icon": f"https://openweathermap.org/img/wn/{day['weather'][0]['icon']}@2x.png",
+                    "icon": icon,
                     "min_temp": day["temp"]["min"],
                     "max_temp": day["temp"]["max"],
                     "temp": day["temp"]["day"],
@@ -170,7 +184,7 @@ class Weather:
         for hour in self.history["hourly"]:
             if dt_range[0] < hour["dt"] < dt_range[1]:
                 try:
-                    rain += Location.sum_all_rain(hour["rain"])
+                    rain += Weather.sum_all_rain(hour["rain"])
                 except KeyError:
                     # No rain in the period
                     pass
@@ -179,7 +193,7 @@ class Weather:
         for day in self.forecast["daily"]:
             if dt_range[0] < day["dt"] < dt_range[1]:
                 try:
-                    rain += Location.sum_all_rain(day["rain"])
+                    rain += Weather.sum_all_rain(day["rain"])
                 except KeyError:
                     # No rain in the period
                     pass
@@ -210,6 +224,7 @@ class WeatherAPIError(Exception):
 
     def __init__(self, source):
         self.source = source
+        super().__init__(source)
 
     def __str__(self):
         return f"Source of error: {self.source}"
@@ -220,3 +235,14 @@ class WeatherNotCollectedError(Exception):
 
     def __str__(self):
         return "Weather must be collected from the API first"
+
+
+class InvalidLatLng(Exception):
+    """Lat Long coords are not valid."""
+
+    def __init__(self, latlng):
+        self.latlng = latlng
+        super().__init__(latlng)
+
+    def __str__(self):
+        return f"Invalid Coordinates, lat/long = {self.latlng}"
