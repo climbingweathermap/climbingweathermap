@@ -23,7 +23,7 @@ class Location:
 class Weather:
     """Weather current and forecast at a single location"""
 
-    def __init__(self, location):
+    def __init__(self, location, api_url, api_key, get_weather=False):
         """Initialise."""
 
         self.location = location
@@ -31,7 +31,14 @@ class Weather:
         self.forecast = None
         self.weather = None
 
-    def get_weather(self, API_URL, API_KEY):
+        self.api_url = api_url
+        self.api_key = api_key
+
+        if get_weather:
+            self.get_weather()
+            self.summarise_weather()
+
+    def get_weather(self):
         """Retrieve historical and forecast weather
         from API for a single lcoation."""
 
@@ -40,17 +47,17 @@ class Weather:
             keys = {
                 "lat": self.location.latlng[0],
                 "lon": self.location.latlng[1],
-                "appid": API_KEY,
+                "appid": self.api_key,
                 "exclude": "minutely,hourly,alerts,current",
                 "units": "metric",
             }
-            self.forecast = requests.get(API_URL, params=keys).json()
+            self.forecast = requests.get(self.api_url, params=keys).json()
 
             # Historical
             keys = {
                 "lat": self.location.latlng[0],
                 "lon": self.location.latlng[1],
-                "appid": API_KEY,
+                "appid": self.api_key,
                 "units": "metric",
                 "dt": round(
                     datetime.timestamp(
@@ -61,7 +68,7 @@ class Weather:
             }
 
             self.history = requests.get(
-                f"{API_URL}/timemachine", params=keys
+                f"{self.api_url}/timemachine", params=keys
             ).json()
 
         except (

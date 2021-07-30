@@ -65,11 +65,14 @@ def get_weather(locations):
         ),
     ):
         try:
-            weather.append(Weather(location))
-            weather[-1].get_weather(
-                app.config["WEATHER_API"], app.config["WEATHER_KEY"]
+            weather.append(
+                Weather(
+                    location,
+                    app.config["WEATHER_API"],
+                    app.config["WEATHER_KEY"],
+                    get_weather=True,
+                )
             )
-            weather[-1].summarise_weather()
         except WeatherAPIError as e:
             app.logger.error(e)
             app.logger.error(f"Weather API error, failed = {location.name}")
