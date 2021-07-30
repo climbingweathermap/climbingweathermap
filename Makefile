@@ -1,7 +1,7 @@
-.DEFAULT_GOAL := test
-.PHONY: test deploy
+.DEFAULT_GOAL := local
+.PHONY: local deploy
 
-test:
+local:
 	docker-compose build
 	docker-compose up
 
