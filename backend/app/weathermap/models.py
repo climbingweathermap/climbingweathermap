@@ -206,6 +206,9 @@ class Weather:
         if self.history is None or self.forecast is None:
             raise WeatherNotCollectedError
 
+        # ensure list is sorted correctly
+        dt_range.sort()
+
         rain = 0
 
         # start with history
