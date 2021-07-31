@@ -95,7 +95,7 @@ def test_weather_to_dict_nocall(my_location, my_weather_nocall):
 def test_weather_to_dict_withcall(my_location, my_weather):
     """Test creating a weather object and return dict."""
     assert my_weather.to_dict() == {
-        "weather": "some stuff",
+        "weather": my_weather.weather,
         "location": my_location.to_dict(),
     }
 
@@ -109,6 +109,19 @@ def test_get_precip_error(my_weather_nocall):
 
 def test_get_precip(my_weather):
     pass
+
+
+def test_summarise_no_weather(my_weather_nocall):
+    """Test when summarise weather is called
+    before any is collected from API."""
+    with pytest.raises(WeatherNotCollectedError):
+        my_weather_nocall.summarise_weather()
+
+
+def test_summarise_weather(my_weather):
+    """Test that summarise weather behaves as expected."""
+    expected_summary = {}
+    assert my_weather.weather == expected_summary
 
 
 @pytest.mark.parametrize(
