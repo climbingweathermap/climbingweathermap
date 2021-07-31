@@ -1,7 +1,8 @@
 """ Weathermap data models """
-import requests
 import json
 from datetime import datetime, timedelta
+
+import requests
 
 
 class Location:
@@ -9,11 +10,21 @@ class Location:
 
     def __init__(self, ref, data):
         """Climbing Location."""
+        # Check lat and long are valid
 
-        self.ref = ref
-        self.name = data["name"]
-        self.latlng = [data["lat"], data["long"]]  # list [lat,long]
-        self.url = data["url"]
+        try:
+            # list [lat,long]
+            self.latlng = [float(data["lat"]), float(data["long"])]
+        except ValueError:
+            # Invalid input so raise latlng error
+            raise InvalidLatLng([data["lat"], data["long"]])
+
+        if (-90 < self.latlng[0] < 90) and (-180 < self.latlng[1] < 180):
+            self.ref = ref
+            self.name = data["name"]
+            self.url = data["url"]
+        else:
+            raise InvalidLatLng(self.latlng)
 
     def to_dict(self):
         """Return dict version of object"""
@@ -27,20 +38,20 @@ class Weather:
         """Initialise."""
 
         self.location = location
-        self.history = None
-        self.forecast = None
-        self.weather = None
 
         self.api_url = api_url
         self.api_key = api_key
+
+        self.history = None
+        self.forecast = None
+        self.weather = None
 
         if get_weather:
             self.get_weather()
             self.summarise_weather()
 
-    def get_weather(self):
-        """Retrieve historical and forecast weather
-        from API for a single lcoation."""
+    def get_forecast(self):
+        """Get forecast weather"""
 
         # Current and Forecast
         try:
@@ -52,19 +63,36 @@ class Weather:
                 "units": "metric",
             }
             self.forecast = requests.get(self.api_url, params=keys).json()
+        except (
+            json.decoder.JSONDecodeError,
+            requests.exceptions.ConnectionError,
+            KeyError,
+        ) as error:
+            raise WeatherAPIError(error) from error
 
-            # Historical
+        # Empty results list returns error
+        if not self.forecast:
+            raise WeatherAPIError("Empty Response")
+
+    def get_history(self):
+        """Get historical weather data."""
+        if not self.forecast:
+            raise WeatherAPIError(
+                "get_forecast() must be called before get_history()"
+            )
+
+        try:
+
+            today = datetime.fromtimestamp(self.forecast["daily"][0]["dt"])
+
+            dt = round(datetime.timestamp(today - timedelta(days=3)))
+
             keys = {
                 "lat": self.location.latlng[0],
                 "lon": self.location.latlng[1],
                 "appid": self.api_key,
                 "units": "metric",
-                "dt": round(
-                    datetime.timestamp(
-                        datetime.fromtimestamp(self.forecast["daily"][0]["dt"])
-                        - timedelta(days=3)
-                    )
-                ),
+                "dt": dt,
             }
 
             self.history = requests.get(
@@ -75,36 +103,25 @@ class Weather:
             json.decoder.JSONDecodeError,
             requests.exceptions.ConnectionError,
             KeyError,
-        ) as e:
-            raise WeatherAPIError(e)
+        ) as error:
+            raise WeatherAPIError(error) from error
 
         # Empty results list returns error
-        if not self.forecast or not self.history:
-            raise WeatherAPIError("Unknown")
+        if not self.history:
+            raise WeatherAPIError("Empty Response")
+
+    def get_weather(self):
+        """Retrieve historical and forecast weather
+        from API for a single lcoation."""
+
+        try:
+            self.get_forecast()
+            self.get_history()
+        except WeatherAPIError as error:
+            raise error
 
     def summarise_weather(self):
-        """Summarise weather
-
-        Returns JSON like:
-        [
-
-            {
-                dt: 1627156800
-                text: "Cloudy"
-                icon: "//xyz.png"
-                rain: 0.5
-                rain_last_2_day: 10.2
-                min_temp:15
-                max_temp:31
-                humidity: "14"
-                rain_perc: "21"
-            },
-            {
-                ...
-            }
-        ]
-
-        """
+        """Summarise weather."""
 
         if self.history is None or self.forecast is None:
             raise WeatherNotCollectedError
@@ -127,7 +144,7 @@ class Weather:
                 )
             )
 
-            rain_last_2_day = self.get_precip([start_dt, dt])
+            rain_last_2_day = self.get_precip([start_dt, dt])  # noqa
 
             total_rain = rain + rain_last_2_day
 
@@ -138,11 +155,15 @@ class Weather:
             except ValueError:
                 rain_score = 3  # out of limit of the lookup table
 
+            icon = (
+                "https://openweathermap.org/img/wn/"
+                f"{day['weather'][0]['icon']}@2x.png"
+            )
             self.weather.append(
                 {
                     "dt": dt,
                     "text": day["weather"][0]["description"],
-                    "icon": f"https://openweathermap.org/img/wn/{day['weather'][0]['icon']}@2x.png",
+                    "icon": icon,
                     "min_temp": day["temp"]["min"],
                     "max_temp": day["temp"]["max"],
                     "temp": day["temp"]["day"],
@@ -164,13 +185,16 @@ class Weather:
         if self.history is None or self.forecast is None:
             raise WeatherNotCollectedError
 
+        # ensure list is sorted correctly
+        dt_range.sort()
+
         rain = 0
 
         # start with history
         for hour in self.history["hourly"]:
             if dt_range[0] < hour["dt"] < dt_range[1]:
                 try:
-                    rain += Location.sum_all_rain(hour["rain"])
+                    rain += Weather.sum_all_rain(hour["rain"])
                 except KeyError:
                     # No rain in the period
                     pass
@@ -179,7 +203,7 @@ class Weather:
         for day in self.forecast["daily"]:
             if dt_range[0] < day["dt"] < dt_range[1]:
                 try:
-                    rain += Location.sum_all_rain(day["rain"])
+                    rain += Weather.sum_all_rain(day["rain"])
                 except KeyError:
                     # No rain in the period
                     pass
@@ -210,6 +234,7 @@ class WeatherAPIError(Exception):
 
     def __init__(self, source):
         self.source = source
+        super().__init__(source)
 
     def __str__(self):
         return f"Source of error: {self.source}"
@@ -220,3 +245,14 @@ class WeatherNotCollectedError(Exception):
 
     def __str__(self):
         return "Weather must be collected from the API first"
+
+
+class InvalidLatLng(Exception):
+    """Lat Long coords are not valid."""
+
+    def __init__(self, latlng):
+        self.latlng = latlng
+        super().__init__(latlng)
+
+    def __str__(self):
+        return f"Invalid Coordinates, lat/long = {self.latlng}"

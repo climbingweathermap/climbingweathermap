@@ -1,8 +1,11 @@
+"""App for climbing weather map (flask backend)."""
+
 import json
 import logging
 from datetime import datetime
 
 from flask import Flask, jsonify, Response
+from flask.logging import create_logger
 from flask_cors import CORS
 from flask_caching import Cache
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -13,6 +16,7 @@ from .weathermap import Location, Weather, WeatherAPIError
 app = Flask(__name__)
 app.config.from_pyfile("settings.py")
 cache = Cache(app)
+logger = create_logger(app)
 
 """
 Exampe .env
@@ -44,11 +48,11 @@ scheduler.start()
 def get_locations(path_to_locations):
     """Get locations from local dataset"""
 
-    with open(path_to_locations, "r") as f:
-        location_list = json.load(f)
+    with open(path_to_locations, "r") as json_file:
+        location_list = json.load(json_file)
 
     locations = [Location(i, location_list[i]) for i in location_list]
-    app.logger.info("Locations read")
+    logger.info("Locations read")
 
     return locations
 
@@ -74,8 +78,8 @@ def get_weather(locations):
                 )
             )
         except WeatherAPIError as e:
-            app.logger.error(e)
-            app.logger.error(f"Weather API error, failed = {location.name}")
+            logger.error(e)
+            logger.error(f"Weather API error, failed = {location.name}")
 
     return weather
 
@@ -87,15 +91,15 @@ def get_weather(locations):
 )
 def refresh_weather():
     """refresh the cached weather data."""
-    app.logger.info("Getting Weather...")
+    logger.info("Getting Weather...")
     locations = get_locations(app.config["LOCATIONS"])
     weather = get_weather(locations)
     # Check that at least some weather was gathered.
     if weather:
-        app.logger.info("Weather Collected")
+        logger.info("Weather Collected")
         cache.set("weather", weather)
     else:
-        app.logger.error("Weather could not be gathered")
+        logger.error("Weather could not be gathered")
 
 
 @app.route("/api/v1/locations", methods=["GET"])
@@ -130,7 +134,7 @@ def all_weather():
 
 if __name__ != "__main__":
     gunicorn_logger = logging.getLogger("gunicorn.error")
-    app.logger.handlers = gunicorn_logger.handlers
-    app.logger.setLevel(gunicorn_logger.level)
+    logger.handlers = gunicorn_logger.handlers
+    logger.setLevel(gunicorn_logger.level)
     cache.clear()
     refresh_weather()
