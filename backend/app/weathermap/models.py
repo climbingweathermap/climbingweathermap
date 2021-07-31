@@ -1,6 +1,7 @@
 """ Weathermap data models """
 import json
 from datetime import datetime, timedelta
+from typing import Union, Any
 
 import requests
 
@@ -8,7 +9,10 @@ import requests
 class Location:
     """Climbing location."""
 
-    def __init__(self, ref, data):
+    children: Location = []
+    weather_data: dict[str, Union[str, float]] = None
+
+    def __init__(self, ref: Union[str, int], data: dict[str:str]):
         """Climbing Location."""
         # Check lat and long are valid
 
@@ -26,18 +30,33 @@ class Location:
         else:
             raise InvalidLatLng(self.latlng)
 
-    def to_dict(self):
+    def add_child(self, ref: Union[str, int], data: dict[str:str]):
+        """Add a child location to this location object."""
+        self.children.append(Location(ref, data))
+
+    def get_weather(self, api_url: str, api_key: str):
+        self.weather_data = Weather(
+            self.latlng, api_url, api_key, get_weather=True
+        )
+
+    def to_dict(self) -> dict[str, Union[Any]]:
         """Return dict version of object"""
-        return self.__dict__
+        return {
+            self.ref,
+            self.name,
+            self.latlng,
+            self.weather_data,
+            [c.to_dict() for c in self.children],
+        }
 
 
 class Weather:
-    """Weather current and forecast at a single location"""
+    """Weather current and forecast at a single latlng"""
 
-    def __init__(self, location, api_url, api_key, get_weather=False):
+    def __init__(self, latlng, api_url, api_key, get_weather=False):
         """Initialise."""
 
-        self.location = location
+        self.latlng = latlng
 
         self.api_url = api_url
         self.api_key = api_key
@@ -56,8 +75,8 @@ class Weather:
         # Current and Forecast
         try:
             keys = {
-                "lat": self.location.latlng[0],
-                "lon": self.location.latlng[1],
+                "lat": self.latlng[0],
+                "lon": self.latlng[1],
                 "appid": self.api_key,
                 "exclude": "minutely,hourly,alerts,current",
                 "units": "metric",
@@ -88,8 +107,8 @@ class Weather:
             dt = round(datetime.timestamp(today - timedelta(days=3)))
 
             keys = {
-                "lat": self.location.latlng[0],
-                "lon": self.location.latlng[1],
+                "lat": self.latlng[0],
+                "lon": self.latlng[1],
                 "appid": self.api_key,
                 "units": "metric",
                 "dt": dt,
@@ -126,7 +145,7 @@ class Weather:
         if self.history is None or self.forecast is None:
             raise WeatherNotCollectedError
 
-        self.weather = []
+        self.weather: list[dict[str, Any]] = []
 
         rain_score_lookup = [0.1, 0.4, 1]
 
@@ -175,7 +194,7 @@ class Weather:
                 }
             )
 
-    def get_precip(self, dt_range):
+    def get_precip(self, dt_range: list[int, int]) -> float:
         """Get the rain fall during a given range of dt.
 
         [start_dt, end_dt]
@@ -210,10 +229,10 @@ class Weather:
 
         return rain
 
-    def to_dict(self):
+    def to_dict(self) -> dict[str, Union[Any]]:
         """Return dict version of object"""
 
-        return {"weather": self.weather, "location": self.location.to_dict()}
+        return self.weather
 
     @staticmethod
     def sum_all_rain(rain):

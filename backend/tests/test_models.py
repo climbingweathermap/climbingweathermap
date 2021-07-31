@@ -120,14 +120,14 @@ def my_location():
 @pytest.fixture
 def my_weather_nocall(my_location):
     """Sample weather object for testing."""
-    return Weather(my_location, "APIURL", "APIKEY")
+    return Weather(my_location.latlng, "APIURL", "APIKEY")
 
 
 @pytest.fixture
 def my_weather(my_location, monkeypatch):
     """Sample weather object for testing."""
     monkeypatch.setattr(requests, "get", mock_get)
-    return Weather(my_location, "APIURL", "APIKEY", get_weather=True)
+    return Weather(my_location.latlng, "APIURL", "APIKEY", get_weather=True)
 
 
 @pytest.mark.parametrize(
@@ -147,30 +147,41 @@ def test_invalid_latlng(latlng):
         Location(1, data)
 
 
-def test_location_to_dict(my_location):
+def test_location_to_dict_no_weather(my_location):
     """Test creating a location object and returning a dictionary."""
     assert my_location.to_dict() == {
         "ref": 1,
         "name": "good location",
         "url": "https://openweathermap.org/api/one-call-api",
         "latlng": [33.44, -94.04],
-    }
-
-
-def test_weather_to_dict_nocall(my_location, my_weather_nocall):
-    """Test creating a weather object (without an API call) and return dict."""
-    assert my_weather_nocall.to_dict() == {
         "weather": None,
-        "location": my_location.to_dict(),
+        "children": [],
     }
 
 
-def test_weather_to_dict_withcall(my_location, my_weather):
+def test_location_to_dict_with_weather(my_location, monkeypatch):
+    """Test creating a location object and returning a dictionary."""
+    monkeypatch.setattr(requests, "get", mock_get)
+
+    my_location.get_weather("abc", "def")
+    assert my_location.to_dict() == {
+        "ref": 1,
+        "name": "good location",
+        "url": "https://openweathermap.org/api/one-call-api",
+        "latlng": [33.44, -94.04],
+        "weather": my_location.weather,
+        "children": [],
+    }
+
+
+def test_weather_to_dict_nocall(my_weather_nocall):
+    """Test creating a weather object (without an API call) and return dict."""
+    assert my_weather_nocall.to_dict() == {"weather": None}
+
+
+def test_weather_to_dict_withcall(my_weather):
     """Test creating a weather object and return dict."""
-    assert my_weather.to_dict() == {
-        "weather": my_weather.weather,
-        "location": my_location.to_dict(),
-    }
+    assert my_weather.to_dict() == {"weather": my_weather.weather}
 
 
 def test_get_precip_error(my_weather_nocall):
