@@ -49,9 +49,8 @@ class Weather:
             self.get_weather()
             self.summarise_weather()
 
-    def get_weather(self):
-        """Retrieve historical and forecast weather
-        from API for a single lcoation."""
+    def get_forecast(self):
+        """Get forecast weather"""
 
         # Current and Forecast
         try:
@@ -63,19 +62,36 @@ class Weather:
                 "units": "metric",
             }
             self.forecast = requests.get(self.api_url, params=keys).json()
+        except (
+            json.decoder.JSONDecodeError,
+            requests.exceptions.ConnectionError,
+            KeyError,
+        ) as error:
+            raise WeatherAPIError from error
 
-            # Historical
+        # Empty results list returns error
+        if not self.forecast:
+            raise WeatherAPIError("Unknown")
+
+    def get_history(self):
+        """Get historical weather data."""
+        if not self.forecast:
+            raise WeatherAPIError(
+                "get_forecast must be called before get_history"
+            )
+
+        try:
+
+            today = datetime.fromtimestamp(self.forecast["daily"][0]["dt"])
+
+            dt = round(datetime.timestamp(today - timedelta(days=3)))
+
             keys = {
                 "lat": self.location.latlng[0],
                 "lon": self.location.latlng[1],
                 "appid": self.api_key,
                 "units": "metric",
-                "dt": round(
-                    datetime.timestamp(
-                        datetime.fromtimestamp(self.forecast["daily"][0]["dt"])
-                        - timedelta(days=3)
-                    )
-                ),
+                "dt": dt,
             }
 
             self.history = requests.get(
@@ -90,8 +106,18 @@ class Weather:
             raise WeatherAPIError from error
 
         # Empty results list returns error
-        if not self.forecast or not self.history:
+        if not self.history:
             raise WeatherAPIError("Unknown")
+
+    def get_weather(self):
+        """Retrieve historical and forecast weather
+        from API for a single lcoation."""
+
+        try:
+            self.get_forecast()
+            self.history()
+        except WeatherAPIError as error:
+            raise error
 
     def summarise_weather(self):
         """Summarise weather
