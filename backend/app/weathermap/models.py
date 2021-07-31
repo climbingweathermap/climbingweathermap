@@ -121,28 +121,7 @@ class Weather:
             raise error
 
     def summarise_weather(self):
-        """Summarise weather
-
-        Returns JSON like:
-        [
-
-            {
-                dt: 1627156800
-                text: "Cloudy"
-                icon: "//xyz.png"
-                rain: 0.5
-                rain_last_2_day: 10.2
-                min_temp:15
-                max_temp:31
-                humidity: "14"
-                rain_perc: "21"
-            },
-            {
-                ...
-            }
-        ]
-
-        """
+        """Summarise weather."""
 
         if self.history is None or self.forecast is None:
             raise WeatherNotCollectedError
