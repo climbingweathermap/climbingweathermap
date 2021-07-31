@@ -1,7 +1,7 @@
 """ Weathermap data models """
 import json
 from datetime import datetime, timedelta
-from typing import Union, Any
+from typing import Union, Any, Optional
 
 import requests
 
@@ -9,28 +9,31 @@ import requests
 class Location:
     """Climbing location."""
 
-    children: Location = []
-    weather_data: dict[str, Union[str, float]] = None
+    children: list["Location"] = []
+    weather_data: Optional["Weather"] = None
 
-    def __init__(self, ref: Union[str, int], data: dict[str:str]):
+    def __init__(self, ref: Union[str, int], data: dict[str, Any]):
         """Climbing Location."""
         # Check lat and long are valid
 
         try:
             # list [lat,long]
-            self.latlng = [float(data["lat"]), float(data["long"])]
+            self.latlng: list[float] = [
+                float(data["lat"]),
+                float(data["long"]),
+            ]
         except ValueError:
             # Invalid input so raise latlng error
             raise InvalidLatLng([data["lat"], data["long"]])
 
         if (-90 < self.latlng[0] < 90) and (-180 < self.latlng[1] < 180):
-            self.ref = ref
-            self.name = data["name"]
-            self.url = data["url"]
+            self.ref: Union[str, int] = ref
+            self.name: str = data["name"]
+            self.url: str = data["url"]
         else:
             raise InvalidLatLng(self.latlng)
 
-    def add_child(self, ref: Union[str, int], data: dict[str:str]):
+    def add_child(self, ref: Union[str, int], data: dict[str, Any]):
         """Add a child location to this location object."""
         self.children.append(Location(ref, data))
 
@@ -42,28 +45,39 @@ class Location:
     def to_dict(self) -> dict[str, Union[Any]]:
         """Return dict version of object"""
         return {
-            self.ref,
-            self.name,
-            self.latlng,
-            self.weather_data,
-            [c.to_dict() for c in self.children],
+            "ref": self.ref,
+            "name": self.name,
+            "latlng": self.latlng,
+            "url": self.url,
+            "weather": self.weather_data.to_dict()
+            if self.weather_data
+            else None,
+            "children": [c.to_dict() for c in self.children]
+            if len(self.children) > 0
+            else [],
         }
 
 
 class Weather:
     """Weather current and forecast at a single latlng"""
 
-    def __init__(self, latlng, api_url, api_key, get_weather=False):
+    def __init__(
+        self,
+        latlng: list[float],
+        api_url: str,
+        api_key: str,
+        get_weather: bool = False,
+    ):
         """Initialise."""
 
-        self.latlng = latlng
+        self.latlng: list[float] = latlng
 
-        self.api_url = api_url
-        self.api_key = api_key
+        self.api_url: str = api_url
+        self.api_key: str = api_key
 
-        self.history = None
-        self.forecast = None
-        self.weather = None
+        self.history: Optional[dict[str, Any]] = None
+        self.forecast: Optional[dict[str, Any]] = None
+        self.weather: Optional[dict[str, Any]] = None
 
         if get_weather:
             self.get_weather()
@@ -194,7 +208,7 @@ class Weather:
                 }
             )
 
-    def get_precip(self, dt_range: list[int, int]) -> float:
+    def get_precip(self, dt_range: list[int]) -> float:
         """Get the rain fall during a given range of dt.
 
         [start_dt, end_dt]
@@ -207,7 +221,7 @@ class Weather:
         # ensure list is sorted correctly
         dt_range.sort()
 
-        rain = 0
+        rain: float = 0
 
         # start with history
         for hour in self.history["hourly"]:
@@ -227,19 +241,21 @@ class Weather:
                     # No rain in the period
                     pass
 
-        return rain
+        return float(rain)
 
-    def to_dict(self) -> dict[str, Union[Any]]:
+    def to_dict(self) -> Optional[dict[str, Union[Any]]]:
         """Return dict version of object"""
 
         return self.weather
 
     @staticmethod
-    def sum_all_rain(rain):
+    def sum_all_rain(
+        rain: Union[dict[str, Union[str, float, int]], float]
+    ) -> float:
         """Sums up all rain in the response dict from the api call"""
         # Handle if a dict or a value
         if isinstance(rain, dict):
-            total_rain = 0
+            total_rain: float = 0
             for item in rain.values():
                 total_rain += float(item)
         else:
@@ -269,9 +285,9 @@ class WeatherNotCollectedError(Exception):
 class InvalidLatLng(Exception):
     """Lat Long coords are not valid."""
 
-    def __init__(self, latlng):
-        self.latlng = latlng
+    def __init__(self, latlng: list[float]):
+        self.latlng: list[float] = latlng
         super().__init__(latlng)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Invalid Coordinates, lat/long = {self.latlng}"

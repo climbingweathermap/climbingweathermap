@@ -20,6 +20,7 @@ python-dotenv = "0.17.1"
 gunicorn = "^20.1.0"
 redis = "^3.5.3"
 pytest-cov = "^2.12.1"
+mypy = "^0.910"
 
 [tool.poetry.dev-dependencies]
 tox = "^3.24.0"
@@ -53,6 +54,7 @@ whitelist_externals = poetry
 commands =
 	poetry run black app/
 	poetry run flake8 app/
+	poetry run mypy app/
 	poetry run pylint app/ --exit-zero
 	poetry run pylint app/ -E
 	poetry run pytest --cov-report term-missing  --cov=app tests/

@@ -6,9 +6,11 @@ from datetime import datetime
 
 from flask import Flask, jsonify, Response
 from flask.logging import create_logger
-from flask_cors import CORS
-from flask_caching import Cache
-from apscheduler.schedulers.background import BackgroundScheduler
+from flask_cors import CORS  # type: ignore
+from flask_caching import Cache  # type: ignore
+from apscheduler.schedulers.background import (  # type: ignore
+    BackgroundScheduler,  # type: ignore
+)
 from rich.progress import track
 
 from .weathermap import Location, Weather, WeatherAPIError

@@ -169,19 +169,19 @@ def test_location_to_dict_with_weather(my_location, monkeypatch):
         "name": "good location",
         "url": "https://openweathermap.org/api/one-call-api",
         "latlng": [33.44, -94.04],
-        "weather": my_location.weather,
+        "weather": my_location.weather_data.to_dict(),
         "children": [],
     }
 
 
 def test_weather_to_dict_nocall(my_weather_nocall):
     """Test creating a weather object (without an API call) and return dict."""
-    assert my_weather_nocall.to_dict() == {"weather": None}
+    assert my_weather_nocall.to_dict() is None
 
 
 def test_weather_to_dict_withcall(my_weather):
     """Test creating a weather object and return dict."""
-    assert my_weather.to_dict() == {"weather": my_weather.weather}
+    assert my_weather.to_dict() == my_weather.weather
 
 
 def test_get_precip_error(my_weather_nocall):
@@ -192,7 +192,8 @@ def test_get_precip_error(my_weather_nocall):
 
 
 def test_get_precip(my_weather):
-    pass
+    """Test rain calcualtion."""
+    assert my_weather.get_precip([1627599277, 1627772077]) == 0
 
 
 def test_summarise_no_weather(my_weather_nocall):
@@ -247,3 +248,17 @@ def test_InvalidLatLng_response():
     """Check string output of InvalidLatLng."""
     response_str = "Invalid Coordinates, lat/long = [45, -129]"
     assert str(InvalidLatLng([45, -129])) == response_str
+
+
+def test_add_child(my_location):
+    """Add a child location to a location"""
+
+    data = {
+        "name": "good location",
+        "url": "https://openweathermap.org/api/one-call-api",
+        "lat": 33.44,
+        "long": -94.04,
+    }
+
+    my_location.add_child(2, data)
+    assert len(my_location.children) == 1
