@@ -72,7 +72,7 @@ class Weather:
 
         # Empty results list returns error
         if not self.forecast:
-            raise WeatherAPIError("Unknown")
+            raise WeatherAPIError("Empty Response")
 
     def get_history(self):
         """Get historical weather data."""
@@ -108,7 +108,7 @@ class Weather:
 
         # Empty results list returns error
         if not self.history:
-            raise WeatherAPIError("Unknown")
+            raise WeatherAPIError("Empty Response")
 
     def get_weather(self):
         """Retrieve historical and forecast weather
