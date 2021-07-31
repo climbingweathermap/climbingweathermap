@@ -9,10 +9,26 @@ from app.weathermap import (
 )
 
 import pytest
+import requests
 
 
-sample_api_response_forecast = {"a": 1}
-sample_api_response_history = {"b": 2}
+class Mock_Forecast:
+    @staticmethod
+    def json():
+        return {"forecast": 1}
+
+
+class Mock_History:
+    @staticmethod
+    def json():
+        return {"history": 1}
+
+
+def mock_get(url, params=None):
+    if "timemachine" in url:
+        return Mock_Forecast()
+    else:
+        return Mock_History()
 
 
 @pytest.fixture
@@ -37,9 +53,7 @@ def my_weather_nocall(my_location):
 @pytest.fixture
 def my_weather(my_location, monkeypatch):
     """Sample weather object for testing."""
-    monkeypatch.setattr(Weather, "forecast", sample_api_response_forecast)
-    monkeypatch.setattr(Weather, "history", sample_api_response_history)
-
+    monkeypatch.setattr(requests, "get", mock_get)
     return Weather(my_location, "APIURL", "APIKEY", get_weather=True)
 
 
@@ -66,7 +80,7 @@ def test_location_to_dict(my_location):
         "ref": 1,
         "name": "good location",
         "url": "https://openweathermap.org/api/one-call-api",
-        "latlng": [45.002, -122.562],
+        "latlng": [33.44, -94.04],
     }
 
 

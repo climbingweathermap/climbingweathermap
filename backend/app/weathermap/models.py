@@ -38,12 +38,13 @@ class Weather:
         """Initialise."""
 
         self.location = location
-        self.history = None
-        self.forecast = None
-        self.weather = None
 
         self.api_url = api_url
         self.api_key = api_key
+
+        self.history = None
+        self.forecast = None
+        self.weather = None
 
         if get_weather:
             self.get_weather()
@@ -67,7 +68,7 @@ class Weather:
             requests.exceptions.ConnectionError,
             KeyError,
         ) as error:
-            raise WeatherAPIError from error
+            raise WeatherAPIError(error) from error
 
         # Empty results list returns error
         if not self.forecast:
@@ -77,7 +78,7 @@ class Weather:
         """Get historical weather data."""
         if not self.forecast:
             raise WeatherAPIError(
-                "get_forecast must be called before get_history"
+                "get_forecast() must be called before get_history()"
             )
 
         try:
@@ -103,7 +104,7 @@ class Weather:
             requests.exceptions.ConnectionError,
             KeyError,
         ) as error:
-            raise WeatherAPIError from error
+            raise WeatherAPIError(error) from error
 
         # Empty results list returns error
         if not self.history:
@@ -115,7 +116,7 @@ class Weather:
 
         try:
             self.get_forecast()
-            self.history()
+            self.get_history()
         except WeatherAPIError as error:
             raise error
 
