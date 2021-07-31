@@ -1,7 +1,8 @@
 """ Weathermap data models """
-import requests
 import json
 from datetime import datetime, timedelta
+
+import requests
 
 
 class Location:
@@ -137,7 +138,7 @@ class Weather:
                 )
             )
 
-            rain_last_2_day = self.get_precip([start_dt, dt])
+            rain_last_2_day = self.get_precip([start_dt, dt])  # noqa
 
             total_rain = rain + rain_last_2_day
 
