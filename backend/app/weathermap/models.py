@@ -2,15 +2,15 @@
 import json
 from datetime import datetime, timedelta
 from typing import Union, Any, Optional
+import logging
 
 import requests
+
+logger = logging.getLogger(__name__)
 
 
 class Location:
     """Climbing location."""
-
-    children: list["Location"] = []
-    weather_data: Optional["Weather"] = None
 
     def __init__(self, ref: Union[str, int], data: dict[str, Any]):
         """Climbing Location."""
@@ -29,7 +29,7 @@ class Location:
         if (-90 < self.latlng[0] < 90) and (-180 < self.latlng[1] < 180):
             self.ref: Union[str, int] = ref
             self.name: str = data["name"]
-            if 'url' in data:self
+            if "url" in data:
                 self.url: Optional[str] = data["url"]
             else:
                 self.url = None
@@ -37,37 +37,50 @@ class Location:
             raise InvalidLatLng(self.latlng)
 
         # Add children recursively
+        self.children: list["Location"] = []
         if "children" in data:
-            self.recursive_add_children(data["children"])
+            for c_ref, c_data in data["children"].items():
+                self.children.append(Location(c_ref, c_data))
 
-    def add_child(self, ref: Union[str, int], data: dict[str, Any]):
-        """Add a child location to this location object."""
-        self.children.append(Location(ref, data))
-
-    def recursive_add_children(self, children: dict[str, Any]):
-        """Add children recursively to include all children"""
-
-        for ref, data in children.items():
-            self.add_child(ref, data)
+        # initialise weather
+        self.weather_data: Optional["Weather"] = None
 
     def get_weather(self, api_url: str, api_key: str):
-        self.weather_data = Weather(
-            self.latlng, api_url, api_key, get_weather=True
-        )
+        try:
+            self.weather_data = Weather(
+                self.latlng, api_url, api_key, get_weather=True
+            )
+        except WeatherAPIError as error:
+            logger.error(f"{self.name} -- {error}")
+
+        # recursively populate for children
+        for child in self.children:
+            child.get_weather(api_url, api_key)
 
     def to_dict(self) -> dict[str, Union[Any]]:
         """Return dict version of object"""
+
+        if self.children:
+            child_dict: Optional[list[dict["str", Any]]] = [
+                c.to_dict() for c in self.children
+            ]
+        else:
+            child_dict = []
+
+        if self.weather_data:
+            weather_dict: Optional[
+                dict[str, Any]
+            ] = self.weather_data.to_dict()
+        else:
+            weather_dict = None
+
         return {
             "ref": self.ref,
             "name": self.name,
             "latlng": self.latlng,
             "url": self.url,
-            "weather": self.weather_data.to_dict()
-            if self.weather_data
-            else None,
-            "children": [c.to_dict() for c in self.children]
-            if len(self.children) > 0
-            else [],
+            "weather": weather_dict,
+            "children": child_dict,
         }
 
     @staticmethod
@@ -75,8 +88,8 @@ class Location:
         """Build the location list/tree from a source dict/json."""
         locations = []
 
-        for ref, data in source.items():
-            locations.append(Location(ref, data))
+        for _ref, _data in source.items():
+            locations.append(Location(_ref, _data))
 
         return locations
 
@@ -266,7 +279,7 @@ class Weather:
 
         return float(rain)
 
-    def to_dict(self) -> Optional[dict[str, Union[Any]]]:
+    def to_dict(self) -> Optional[dict[str, Any]]:
         """Return dict version of object"""
 
         return self.weather

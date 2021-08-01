@@ -248,17 +248,3 @@ def test_InvalidLatLng_response():
     """Check string output of InvalidLatLng."""
     response_str = "Invalid Coordinates, lat/long = [45, -129]"
     assert str(InvalidLatLng([45, -129])) == response_str
-
-
-def test_add_child(my_location):
-    """Add a child location to a location"""
-
-    data = {
-        "name": "good location",
-        "url": "https://openweathermap.org/api/one-call-api",
-        "lat": 33.44,
-        "long": -94.04,
-    }
-
-    my_location.add_child(2, data)
-    assert len(my_location.children) == 1
