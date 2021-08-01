@@ -3,7 +3,7 @@
 import json
 import logging
 from datetime import datetime
-
+from typing import Any
 from flask import Flask, jsonify, Response
 from flask.logging import create_logger
 from flask_cors import CORS  # type: ignore
@@ -14,6 +14,7 @@ from apscheduler.schedulers.background import (  # type: ignore
 from rich.progress import track
 
 from .weathermap import Location, Weather, WeatherAPIError
+
 
 app = Flask(__name__)
 app.config.from_pyfile("settings.py")
@@ -47,22 +48,25 @@ scheduler.start()
 
 
 @cache.cached(key_prefix="location", timeout=300)
-def get_locations(path_to_locations):
+def get_locations(path_to_locations: str) -> list[Location]:
     """Get locations from local dataset"""
 
     with open(path_to_locations, "r") as json_file:
-        location_list = json.load(json_file)
+        location_json = json.load(json_file)
 
-    locations = [Location(i, location_list[i]) for i in location_list]
+    locations: list[Location] = Location.create_location_tree(location_json)
+
     logger.info("Locations read")
+
+    print(locations)
 
     return locations
 
 
-def get_weather(locations):
+def get_weather(locations: list[Location]) -> list[Weather]:
     """get weather data for locations."""
 
-    weather = []
+    weather: list[Weather] = []
     for location in track(
         locations,
         description=(
@@ -73,7 +77,7 @@ def get_weather(locations):
         try:
             weather.append(
                 Weather(
-                    location,
+                    location.latlng,
                     app.config["WEATHER_API"],
                     app.config["WEATHER_KEY"],
                     get_weather=True,
@@ -94,8 +98,8 @@ def get_weather(locations):
 def refresh_weather():
     """refresh the cached weather data."""
     logger.info("Getting Weather...")
-    locations = get_locations(app.config["LOCATIONS"])
-    weather = get_weather(locations)
+    locations: list[Location] = get_locations(app.config["LOCATIONS"])
+    weather: list[Weather] = get_weather(locations)
     # Check that at least some weather was gathered.
     if weather:
         logger.info("Weather Collected")
@@ -108,10 +112,10 @@ def refresh_weather():
 def all_locations():
     """v1 api to get location using cache"""
 
-    locations = get_locations(app.config["LOCATIONS"])
+    locations: list[Location] = get_locations(app.config["LOCATIONS"])
 
     # jsonify everything into one response
-    response = jsonify([loc.to_dict() for loc in locations])
+    response: dict[str, Any] = jsonify([loc.to_dict() for loc in locations])
 
     return response
 
@@ -120,7 +124,7 @@ def all_locations():
 def all_weather():
     """v1 api to get location and weather using cache"""
 
-    weather = cache.get("weather")
+    weather: dict = cache.get("weather")
 
     # if weather isn't in cache then return error code
     if weather is None:
@@ -129,7 +133,7 @@ def all_weather():
         )
 
     # jsonify everything into one response
-    response = jsonify([loc.to_dict() for loc in weather])
+    response: dict[str, Any] = jsonify([loc.to_dict() for loc in weather])
 
     return response
 

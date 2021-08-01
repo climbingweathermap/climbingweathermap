@@ -33,9 +33,19 @@ class Location:
         else:
             raise InvalidLatLng(self.latlng)
 
+        # Add children recursively
+        if data.children:
+            self.recursive_add_children(data.children)
+
     def add_child(self, ref: Union[str, int], data: dict[str, Any]):
         """Add a child location to this location object."""
         self.children.append(Location(ref, data))
+
+    def recursive_add_children(self, children: dict[str, Any]):
+        """Add children recursively to include all children"""
+
+        for ref, data in children.items():
+            self.add_child(ref, data)
 
     def get_weather(self, api_url: str, api_key: str):
         self.weather_data = Weather(
@@ -56,6 +66,16 @@ class Location:
             if len(self.children) > 0
             else [],
         }
+
+    @staticmethod
+    def create_location_tree(source: dict[str, Any]) -> list["Location"]:
+        """Build the location list/tree from a source dict/json."""
+        locations = []
+
+        for ref, data in source.items():
+            locations.append(Location(ref, data))
+
+        return locations
 
 
 class Weather:
