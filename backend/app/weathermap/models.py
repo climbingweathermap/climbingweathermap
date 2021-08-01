@@ -29,13 +29,16 @@ class Location:
         if (-90 < self.latlng[0] < 90) and (-180 < self.latlng[1] < 180):
             self.ref: Union[str, int] = ref
             self.name: str = data["name"]
-            self.url: str = data["url"]
+            if 'url' in data:self
+                self.url: Optional[str] = data["url"]
+            else:
+                self.url = None
         else:
             raise InvalidLatLng(self.latlng)
 
         # Add children recursively
-        if data.children:
-            self.recursive_add_children(data.children)
+        if "children" in data:
+            self.recursive_add_children(data["children"])
 
     def add_child(self, ref: Union[str, int], data: dict[str, Any]):
         """Add a child location to this location object."""

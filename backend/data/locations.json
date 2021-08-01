@@ -20,18 +20,8 @@
         "name": "Yosemite Valley",
         "url": "https://www.mountainproject.com/area/105833388/yosemite-valley"
     },
-    "6":
-    {
-        "lat": 42.078,
-        "long": -113.724,
-        "name": "City of Rocks",
-        "url": "https://www.mountainproject.com/area/105739322/city-of-rocks"
-    },
     "34":
     {
-        "name": "British Columbia",
-        "lat": 49.68,
-        "long": -123.154,
         "children":
         {
             "26":
@@ -41,13 +31,13 @@
                 "name": "Squamish",
                 "url": "https://www.mountainproject.com/area/105798170/squamish"
             }
-        }
+        },
+        "lat": 49.68,
+        "long": -123.154,
+        "name": "British Columbia"
     },
     "35":
     {
-        "name": "Central Oregon",
-        "lat": 44.368,
-        "long": -121.139,
         "children":
         {
             "24":
@@ -64,16 +54,15 @@
                 "name": "Trout Creek",
                 "url": "https://www.mountainproject.com/area/106505473/trout-creek"
             }
-        }
+        },
+        "lat": 44.368,
+        "long": -121.139,
+        "name": "Central Oregon"
     },
     "36":
     {
-        "name": "Central Washington",
-        "lat": 47.238,
-        "long": -119.842,
         "children":
         {
-
             "27":
             {
                 "lat": 46.684,
@@ -88,13 +77,13 @@
                 "name": "Frenchman Coulee",
                 "url": "https://www.mountainproject.com/area/105792231/frenchman-coulee-aka-vantage"
             }
-        }
+        },
+        "lat": 47.238,
+        "long": -119.842,
+        "name": "Central Washington"
     },
     "37":
     {
-        "name": "Columbia River Gorge - East",
-        "lat": 45.728,
-        "long": -121.486,
         "children":
         {
             "10":
@@ -125,13 +114,13 @@
                 "name": "Windy Slab",
                 "url": "https://www.mountainproject.com/area/109270123/windy-slab"
             }
-        }
+        },
+        "lat": 45.728,
+        "long": -121.486,
+        "name": "Columbia River Gorge - East"
     },
     "38":
     {
-        "name": "Columbia River Gorge - West",
-        "lat": 45.591,
-        "long": -122.156,
         "children":
         {
             "18":
@@ -169,14 +158,13 @@
                 "name": "Empire Boulders",
                 "url": "https://www.mountainproject.com/area/119608476/empire-boulders"
             }
-        }
-
+        },
+        "lat": 45.591,
+        "long": -122.156,
+        "name": "Columbia River Gorge - West"
     },
     "39":
     {
-        "name": "Mt Hood",
-        "lat": 45.375,
-        "long": -121.696,
         "children":
         {
             "1":
@@ -228,28 +216,15 @@
                 "name": "French's Dome",
                 "url": "https://www.mountainproject.com/area/105788992/frenchs-dome"
             }
-        }
+        },
+        "lat": 45.375,
+        "long": -121.696,
+        "name": "Mt Hood"
     },
     "40":
     {
-        "name": "NW Oregon",
-        "lat": 45.458,
-        "long": -118.236,
-        "children":
-        {
-            "25":
-            {
-                "lat": 45.458,
-                "long": -118.236,
-                "name": "Spring Mountain",
-                "url": "https://www.mountainproject.com/area/106735075/spring-mountain"
-            }
-        },
         "41":
         {
-            "name": "North Cascades",
-            "lat": 47.597,
-            "long": -120.659,
             "children":
             {
                 "12":
@@ -273,13 +248,13 @@
                     "name": "Mazama",
                     "url": "https://www.mountainproject.com/area/106112166/mazama"
                 }
-            }
+            },
+            "lat": 47.597,
+            "long": -120.659,
+            "name": "North Cascades"
         },
         "42":
         {
-            "name": "Portland",
-            "lat": 45.55,
-            "long": -122.565,
             "children":
             {
                 "15":
@@ -310,6 +285,30 @@
                     "name": "Carver",
                     "url": "https://www.mountainproject.com/area/105812475/carver"
                 }
+            },
+            "lat": 45.55,
+            "long": -122.565,
+            "name": "Portland"
+        },
+        "children":
+        {
+            "25":
+            {
+                "lat": 45.458,
+                "long": -118.236,
+                "name": "Spring Mountain",
+                "url": "https://www.mountainproject.com/area/106735075/spring-mountain"
             }
-        }
+        },
+        "lat": 45.458,
+        "long": -118.236,
+        "name": "NW Oregon"
+    },
+    "6":
+    {
+        "lat": 42.078,
+        "long": -113.724,
+        "name": "City of Rocks",
+        "url": "https://www.mountainproject.com/area/105739322/city-of-rocks"
     }
+}
