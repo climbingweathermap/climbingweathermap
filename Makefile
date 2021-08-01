@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := local
 .PHONY: local deploy, tox
 
-local:
+local: tox
 	docker-compose build
 	docker-compose up
 
