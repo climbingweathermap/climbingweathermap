@@ -5,7 +5,7 @@ local:
 	docker-compose build
 	docker-compose up
 
-deploy:
+deploy: tox
 	eb deploy
 
 
