@@ -1,7 +1,7 @@
 """ Weathermap data models """
 import json
 from datetime import datetime, timedelta
-from typing import Union, Any, Optional
+from typing import Union, Any, Optional, Sequence
 import logging
 
 import requests
@@ -15,35 +15,35 @@ class Location:
     def __init__(self, ref: Union[str, int], data: dict[str, Any]):
         """Climbing Location."""
         # Check lat and long are valid
-
         try:
-            # list [lat,long]
-            self.latlng: list[float] = [
-                float(data["lat"]),
-                float(data["long"]),
-            ]
-        except ValueError:
-            # Invalid input so raise latlng error
-            raise InvalidLatLng([data["lat"], data["long"]])
-
-        if (-90 < self.latlng[0] < 90) and (-180 < self.latlng[1] < 180):
+            self.latlng: Sequence[float] = Location.parse_latlng(
+                data["lat"], data["long"]
+            )
             self.ref: Union[str, int] = ref
             self.name: str = data["name"]
             if "url" in data:
                 self.url: Optional[str] = data["url"]
             else:
                 self.url = None
-        else:
-            raise InvalidLatLng(self.latlng)
 
-        # Add children recursively
-        self.children: list["Location"] = []
-        if "children" in data:
-            for c_ref, c_data in data["children"].items():
-                self.children.append(Location(c_ref, c_data))
+            # Add children
+            if "children" in data:
+                self.add_children(data["children"])
 
-        # initialise weather
-        self.weather_data: Optional["Weather"] = None
+            else:
+                self.children: list["Location"] = []
+
+            # initialise weather
+            self.weather_data: Optional["Weather"] = None
+
+        except InvalidLatLng as error:
+            raise InvalidLatLng([data["lat"], data["long"]]) from error
+
+    def add_children(self, children: dict[str, Any]):
+        """Add children recursively"""
+        self.children = []
+        for c_ref, c_data in children.items():
+            self.children.append(Location(c_ref, c_data))
 
     def get_weather(self, api_url: str, api_key: str):
         try:
@@ -84,6 +84,23 @@ class Location:
         }
 
     @staticmethod
+    def parse_latlng(
+        lat: Union[float, str, int], lng: Union[float, str, int]
+    ) -> Sequence[float]:
+        """Interpret and check latlng values."""
+        try:
+            # list [lat,long]
+            latlng: Sequence[float] = [float(lat), float(lng)]
+        except ValueError as error:
+            # Invalid input so raise latlng error
+            raise InvalidLatLng([lat, lng]) from error
+
+        if (-90 < latlng[0] < 90) and (-180 < latlng[1] < 180):
+            return latlng
+        else:
+            raise InvalidLatLng(latlng)
+
+    @staticmethod
     def create_location_tree(source: dict[str, Any]) -> list["Location"]:
         """Build the location list/tree from a source dict/json."""
         locations = []
@@ -93,20 +110,33 @@ class Location:
 
         return locations
 
+    @staticmethod
+    def drill(locations: list["Location"]) -> list["Location"]:
+        """Drill down one level to replace parents with children."""
+        drilled_locations = []
+        for loc in locations:
+            # Only drill if location has children
+            if loc.children:
+                drilled_locations.extend(loc.children)
+            else:
+                drilled_locations.append(loc)
+
+        return drilled_locations
+
 
 class Weather:
     """Weather current and forecast at a single latlng"""
 
     def __init__(
         self,
-        latlng: list[float],
+        latlng: Sequence[float],
         api_url: str,
         api_key: str,
         get_weather: bool = False,
     ):
         """Initialise."""
 
-        self.latlng: list[float] = latlng
+        self.latlng: Sequence[float] = latlng
 
         self.api_url: str = api_url
         self.api_key: str = api_key
@@ -321,8 +351,8 @@ class WeatherNotCollectedError(Exception):
 class InvalidLatLng(Exception):
     """Lat Long coords are not valid."""
 
-    def __init__(self, latlng: list[float]):
-        self.latlng: list[float] = latlng
+    def __init__(self, latlng: Sequence[Union[int, str, float]]):
+        self.latlng: Sequence[Union[int, str, float]] = latlng
         super().__init__(latlng)
 
     def __str__(self) -> str:

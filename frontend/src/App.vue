@@ -2,8 +2,8 @@
     <div v-if="gotData">
         <div class="content vh-100">
             <NavBar />
-            <Options @dateChanged="onDateChange" :startDate="weather[0].weather[0].dt" :nDays="weather[0].weather.length-1" />
-            <Map class=" item-main" :weather="weather" :viewDate="parseInt(viewDate)" :startDate="weather[0].weather[0].dt" />
+            <Options @dateChanged="onDateChange" :startDate="locations[0].weather[0].dt" :nDays="locations[0].weather.length-1" />
+            <Map class=" item-main" :locations="locations" :viewDate="parseInt(viewDate)" :startDate="locations[0].weather[0].dt" v-model:zoom="zoom" />
             <Footer />
         </div>
     </div>
@@ -34,35 +34,56 @@
                 viewDate: '',
                 overlay: '',
                 gotData: false,
-                apiKey: '',
+                zoom: 2,
             }
         },
         methods: {
             onDateChange: function(viewDate) {
                 this.viewDate = viewDate
             },
-            getWeatherPromise: function() {
+            getLocationPromise: function() {
                 if (process.env.NODE_ENV === "production") {
                     var path = "https://climbing-weather-map.com/api/v1/locations"
                 } else {
-                    var path = "http://localhost:5000/api/v1/weather"
+                    var path = "http://localhost:5000/api/v1/locations"
                 }
                 console.log(path)
                 return axios({
                         url: path,
                         method: 'get',
+                        params: {
+                            'drill': this.drill
+                        },
                         timeout: 8000
                     }).then(result => result.data)
                     .catch(err => console.error(err))
             },
         },
         mounted: function() {
-            this.getWeatherPromise().then(result => {
+            this.getLocationPromise().then(result => {
                 if (result) {
-                    this.weather = result
+                    this.locations = result
                     this.gotData = true
                 }
             })
+        },
+        computed: {
+            drill() {
+                if (this.zoom < 8) {
+                    return 0
+                } else {
+                    return 1
+                }
+            },
+        },
+        watch: {
+            drill() {
+                this.getLocationPromise().then(result => {
+                    if (result) {
+                        this.locations = result
+                    }
+                })
+            }
         },
     };
 </script>

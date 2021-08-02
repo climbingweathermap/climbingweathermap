@@ -2,7 +2,7 @@
 
 import json
 import logging
-from flask import Flask, jsonify, Response
+from flask import Flask, jsonify, Response, request
 from flask.logging import create_logger
 from flask_cors import CORS  # type: ignore
 from flask_caching import Cache  # type: ignore
@@ -25,7 +25,6 @@ scheduler = BackgroundScheduler()
 scheduler.start()
 
 
-@cache.cached(timeout=300)
 def get_locations(path_to_locations: str) -> list[Location]:
     """Get locations from local dataset"""
 
@@ -58,24 +57,40 @@ def refresh_weather():
             logger.error(f"Weather API error, failed = {loc.name}")
 
     logger.info("Weather Collected")
+
     cache.set("locations", locations)
 
 
 @app.route("/api/v1/locations", methods=["GET"])
 def all_locations() -> Response:
-    """v1 api to get location using cache"""
-    locations = cache.get("locations")
+    """v1 api to get location from cache.
+    drill param is used to specify how many levels
+    to drill into location tree"""
+    locations: list[Location] = cache.get("locations")
 
     # if weather isn't in cache then return error code
     if locations is None:
         return Response(
-            response="Weather/Lcoation Data not available in Cache", status=500
+            response="Weather/Location Data not available in Cache", status=500
         )
 
-    # jsonify everything into one response
-    response: Response = jsonify([loc.to_dict() for loc in locations])
+    # drill down
+    if "drill" in request.args:
+        try:
+            drill = int(request.args["drill"])
+            for _ in range(drill):
+                locations = Location.drill(locations)
+        except ValueError:
+            return Response(
+                response=(
+                    "Invalid aprameter passed for drill, must be int:"
+                    f" {request.args['drill']} was provided"
+                ),
+                status=500,
+            )
 
-    return response
+    # jsonify everything into one response
+    return jsonify([loc.to_dict() for loc in locations])
 
 
 if __name__ != "__main__":
