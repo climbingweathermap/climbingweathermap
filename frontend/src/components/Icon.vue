@@ -11,9 +11,10 @@
                 <p>{{location.weather[viewDate].temp.toFixed(1)}}</p>
             </div>
             <div v-if="largeIcon || showPopup">
-                <a :href="location.url">
+                <a v-if="location.url" :href="location.url">
                     <p>{{location.name}}</p>
                 </a>
+                <p v-else>{{location.name}}</p>
             </div>
         </div>
         <Wpopup v-if="showPopup" :location="location" :viewDate="viewDate" :startDate="startDate" />

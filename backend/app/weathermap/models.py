@@ -1,50 +1,149 @@
 """ Weathermap data models """
 import json
 from datetime import datetime, timedelta
+from typing import Union, Any, Optional, Sequence
+import logging
 
 import requests
+
+logger = logging.getLogger(__name__)
 
 
 class Location:
     """Climbing location."""
 
-    def __init__(self, ref, data):
+    def __init__(self, ref: Union[str, int], data: dict[str, Any]):
         """Climbing Location."""
         # Check lat and long are valid
+        try:
+            self.latlng: Sequence[float] = Location.parse_latlng(
+                data["lat"], data["long"]
+            )
+            self.ref: Union[str, int] = ref
+            self.name: str = data["name"]
+            if "url" in data:
+                self.url: Optional[str] = data["url"]
+            else:
+                self.url = None
 
+            # Add children
+            if "children" in data:
+                self.add_children(data["children"])
+
+            else:
+                self.children: list["Location"] = []
+
+            # initialise weather
+            self.weather_data: Optional["Weather"] = None
+
+        except InvalidLatLng as error:
+            raise InvalidLatLng([data["lat"], data["long"]]) from error
+
+    def add_children(self, children: dict[str, Any]):
+        """Add children recursively"""
+        self.children = []
+        for c_ref, c_data in children.items():
+            self.children.append(Location(c_ref, c_data))
+
+    def get_weather(self, api_url: str, api_key: str):
+        try:
+            self.weather_data = Weather(
+                self.latlng, api_url, api_key, get_weather=True
+            )
+        except WeatherAPIError as error:
+            logger.error(f"{self.name} -- {error}")
+
+        # recursively populate for children
+        for child in self.children:
+            child.get_weather(api_url, api_key)
+
+    def to_dict(self) -> dict[str, Union[Any]]:
+        """Return dict version of object"""
+
+        if self.children:
+            child_dict: Optional[list[dict["str", Any]]] = [
+                c.to_dict() for c in self.children
+            ]
+        else:
+            child_dict = []
+
+        if self.weather_data:
+            weather_dict: Optional[
+                dict[str, Any]
+            ] = self.weather_data.to_dict()
+        else:
+            weather_dict = None
+
+        return {
+            "ref": self.ref,
+            "name": self.name,
+            "latlng": self.latlng,
+            "url": self.url,
+            "weather": weather_dict,
+            "children": child_dict,
+        }
+
+    @staticmethod
+    def parse_latlng(
+        lat: Union[float, str, int], lng: Union[float, str, int]
+    ) -> Sequence[float]:
+        """Interpret and check latlng values."""
         try:
             # list [lat,long]
-            self.latlng = [float(data["lat"]), float(data["long"])]
-        except ValueError:
+            latlng: Sequence[float] = [float(lat), float(lng)]
+        except ValueError as error:
             # Invalid input so raise latlng error
-            raise InvalidLatLng([data["lat"], data["long"]])
+            raise InvalidLatLng([lat, lng]) from error
 
-        if (-90 < self.latlng[0] < 90) and (-180 < self.latlng[1] < 180):
-            self.ref = ref
-            self.name = data["name"]
-            self.url = data["url"]
+        if (-90 < latlng[0] < 90) and (-180 < latlng[1] < 180):
+            return latlng
         else:
-            raise InvalidLatLng(self.latlng)
+            raise InvalidLatLng(latlng)
 
-    def to_dict(self):
-        """Return dict version of object"""
-        return self.__dict__
+    @staticmethod
+    def create_location_tree(source: dict[str, Any]) -> list["Location"]:
+        """Build the location list/tree from a source dict/json."""
+        locations = []
+
+        for _ref, _data in source.items():
+            locations.append(Location(_ref, _data))
+
+        return locations
+
+    @staticmethod
+    def drill(locations: list["Location"]) -> list["Location"]:
+        """Drill down one level to replace parents with children."""
+        drilled_locations = []
+        for loc in locations:
+            # Only drill if location has children
+            if loc.children:
+                drilled_locations.extend(loc.children)
+            else:
+                drilled_locations.append(loc)
+
+        return drilled_locations
 
 
 class Weather:
-    """Weather current and forecast at a single location"""
+    """Weather current and forecast at a single latlng"""
 
-    def __init__(self, location, api_url, api_key, get_weather=False):
+    def __init__(
+        self,
+        latlng: Sequence[float],
+        api_url: str,
+        api_key: str,
+        get_weather: bool = False,
+    ):
         """Initialise."""
 
-        self.location = location
+        self.latlng: Sequence[float] = latlng
 
-        self.api_url = api_url
-        self.api_key = api_key
+        self.api_url: str = api_url
+        self.api_key: str = api_key
 
-        self.history = None
-        self.forecast = None
-        self.weather = None
+        self.history: Optional[dict[str, Any]] = None
+        self.forecast: Optional[dict[str, Any]] = None
+        self.weather: Optional[dict[str, Any]] = None
 
         if get_weather:
             self.get_weather()
@@ -56,8 +155,8 @@ class Weather:
         # Current and Forecast
         try:
             keys = {
-                "lat": self.location.latlng[0],
-                "lon": self.location.latlng[1],
+                "lat": self.latlng[0],
+                "lon": self.latlng[1],
                 "appid": self.api_key,
                 "exclude": "minutely,hourly,alerts,current",
                 "units": "metric",
@@ -88,8 +187,8 @@ class Weather:
             dt = round(datetime.timestamp(today - timedelta(days=3)))
 
             keys = {
-                "lat": self.location.latlng[0],
-                "lon": self.location.latlng[1],
+                "lat": self.latlng[0],
+                "lon": self.latlng[1],
                 "appid": self.api_key,
                 "units": "metric",
                 "dt": dt,
@@ -126,7 +225,7 @@ class Weather:
         if self.history is None or self.forecast is None:
             raise WeatherNotCollectedError
 
-        self.weather = []
+        self.weather: list[dict[str, Any]] = []
 
         rain_score_lookup = [0.1, 0.4, 1]
 
@@ -175,7 +274,7 @@ class Weather:
                 }
             )
 
-    def get_precip(self, dt_range):
+    def get_precip(self, dt_range: list[int]) -> float:
         """Get the rain fall during a given range of dt.
 
         [start_dt, end_dt]
@@ -188,7 +287,7 @@ class Weather:
         # ensure list is sorted correctly
         dt_range.sort()
 
-        rain = 0
+        rain: float = 0
 
         # start with history
         for hour in self.history["hourly"]:
@@ -208,19 +307,21 @@ class Weather:
                     # No rain in the period
                     pass
 
-        return rain
+        return float(rain)
 
-    def to_dict(self):
+    def to_dict(self) -> Optional[dict[str, Any]]:
         """Return dict version of object"""
 
-        return {"weather": self.weather, "location": self.location.to_dict()}
+        return self.weather
 
     @staticmethod
-    def sum_all_rain(rain):
+    def sum_all_rain(
+        rain: Union[dict[str, Union[str, float, int]], float]
+    ) -> float:
         """Sums up all rain in the response dict from the api call"""
         # Handle if a dict or a value
         if isinstance(rain, dict):
-            total_rain = 0
+            total_rain: float = 0
             for item in rain.values():
                 total_rain += float(item)
         else:
@@ -250,9 +351,9 @@ class WeatherNotCollectedError(Exception):
 class InvalidLatLng(Exception):
     """Lat Long coords are not valid."""
 
-    def __init__(self, latlng):
-        self.latlng = latlng
+    def __init__(self, latlng: Sequence[Union[int, str, float]]):
+        self.latlng: Sequence[Union[int, str, float]] = latlng
         super().__init__(latlng)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Invalid Coordinates, lat/long = {self.latlng}"
