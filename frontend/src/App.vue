@@ -3,7 +3,7 @@
         <div class="content vh-100">
             <NavBar />
             <Options @dateChanged="onDateChange" :startDate="locations[0].weather[0].dt" :nDays="locations[0].weather.length-1" />
-            <Map class=" item-main" :locations="locations" :viewDate="parseInt(viewDate)" :startDate="locations[0].weather[0].dt" v-model:zoom="zoom" />
+            <Map class=" item-main" :locations="locations" :viewDate="parseInt(viewDate)" :startDate="locations[0].weather[0].dt" @zoomed="onZoom" />
             <Footer />
         </div>
     </div>
@@ -34,8 +34,11 @@
                 viewDate: '',
                 overlay: '',
                 gotData: false,
-                zoom: 2,
+                drill: 0,
             }
+        },
+        props: {
+            zoom: Number,
         },
         methods: {
             onDateChange: function(viewDate) {
@@ -58,6 +61,23 @@
                     }).then(result => result.data)
                     .catch(err => console.error(err))
             },
+            onZoom: function(zoom) {
+                var newDrill
+                if (zoom < 10) {
+                    newDrill = 0
+                } else {
+                    newDrill = 1
+                }
+                if (newDrill != this.drill) {
+                    this.drill = newDrill
+                    this.getLocationPromise().then(result => {
+                        if (result) {
+                            this.locations = result
+                            this.gotData = true
+                        }
+                    })
+                }
+            }
         },
         mounted: function() {
             this.getLocationPromise().then(result => {
@@ -66,24 +86,6 @@
                     this.gotData = true
                 }
             })
-        },
-        computed: {
-            drill() {
-                if (this.zoom < 8) {
-                    return 0
-                } else {
-                    return 1
-                }
-            },
-        },
-        watch: {
-            drill() {
-                this.getLocationPromise().then(result => {
-                    if (result) {
-                        this.locations = result
-                    }
-                })
-            }
         },
     };
 </script>

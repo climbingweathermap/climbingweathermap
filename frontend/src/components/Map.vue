@@ -9,6 +9,7 @@
                 </l-icon>
             </l-marker>
         </l-map>
+        <h2>{{zoom}}</h2>
     </div>
 </template>
 
@@ -36,7 +37,6 @@
             viewDate: Number,
             overlay: String,
             startDate: Number,
-            zoom: Number,
         },
         data: function() {
             return {
@@ -46,6 +46,7 @@
                 day: (1000 * 24 * 60 * 60),
                 itemRefs: {},
                 iconRefs: {},
+                zoom: 4,
             }
         },
         computed: {
@@ -89,8 +90,8 @@
             this.iconRefs = {}
         },
         watch: {
-            zoom: function() {
-                this.$emit('zoomChange', this.zoom)
+            zoom: function(newZoom, oldZoom) {
+                this.$emit('zoomed', newZoom)
             }
         }
     };
