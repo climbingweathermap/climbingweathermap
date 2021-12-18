@@ -1,13 +1,9 @@
 .DEFAULT_GOAL := local
-.PHONY: local deploy, tox
+.PHONY: local, tox
 
 local: tox
-	docker-compose build
+	docker-compose build -f docker-compose.dev.yml
 	docker-compose up
-
-deploy: tox
-	eb deploy
-
 
 tox:
 	cd backend && poetry run python -m tox -e py39
