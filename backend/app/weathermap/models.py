@@ -47,9 +47,7 @@ class Location:
 
     def get_weather(self, api_url: str, api_key: str):
         try:
-            self.weather_data = Weather(
-                self.latlng, api_url, api_key, get_weather=True
-            )
+            self.weather_data = Weather(self.latlng, api_url, api_key, get_weather=True)
         except WeatherAPIError as error:
             logger.error(f"{self.name} -- {error}")
 
@@ -68,9 +66,7 @@ class Location:
             child_dict = []
 
         if self.weather_data:
-            weather_dict: Optional[
-                dict[str, Any]
-            ] = self.weather_data.to_dict()
+            weather_dict: Optional[dict[str, Any]] = self.weather_data.to_dict()
         else:
             weather_dict = None
 
@@ -176,9 +172,7 @@ class Weather:
     def get_history(self):
         """Get historical weather data."""
         if not self.forecast:
-            raise WeatherAPIError(
-                "get_forecast() must be called before get_history()"
-            )
+            raise WeatherAPIError("get_forecast() must be called before get_history()")
 
         try:
 
@@ -238,9 +232,7 @@ class Weather:
 
             dt = day["dt"]
             start_dt = round(
-                datetime.timestamp(
-                    datetime.fromtimestamp(dt) - timedelta(days=2)
-                )
+                datetime.timestamp(datetime.fromtimestamp(dt) - timedelta(days=2))
             )
 
             rain_last_2_day = self.get_precip([start_dt, dt])  # noqa
@@ -315,9 +307,7 @@ class Weather:
         return self.weather
 
     @staticmethod
-    def sum_all_rain(
-        rain: Union[dict[str, Union[str, float, int]], float]
-    ) -> float:
+    def sum_all_rain(rain: Union[dict[str, Union[str, float, int]], float]) -> float:
         """Sums up all rain in the response dict from the api call"""
         # Handle if a dict or a value
         if isinstance(rain, dict):

@@ -48,9 +48,7 @@ def refresh_weather():
     locations: list[Location] = get_locations(app.config["LOCATIONS"])
     for loc in locations:
         try:
-            loc.get_weather(
-                app.config["WEATHER_API"], app.config["WEATHER_KEY"]
-            )
+            loc.get_weather(app.config["WEATHER_API"], app.config["WEATHER_KEY"])
 
         except WeatherAPIError as error:
             logger.error(error)

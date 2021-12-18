@@ -35,11 +35,13 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.black]
-line-length = 79
+line-length = 88
+
 
 [tool.tox]
 # tox.ini
 legacy_tox_ini = """
+
 [tox]
 isolated_build = True
 isolated_build_env = testenv
@@ -49,11 +51,12 @@ envlist = py39
 # so unless this is python 3 you can require a given python version for the packaging
 # environment via the basepython key
 basepython = python3
+
 [testenv]
 whitelist_externals = poetry
 commands =
 	poetry run black app/
-	poetry run flake8 app/
+	poetry run flake8 app/ --ignore E501
 	poetry run mypy app/
 	poetry run pylint app/ --exit-zero
 	poetry run pylint app/ -E

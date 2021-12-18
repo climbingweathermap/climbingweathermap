@@ -40,7 +40,8 @@
                 return new Date(unixDate).toLocaleDateString(undefined, options)
             },
         }
-    }</script>
+    }
+</script>
 
 <style type="text/css">
     .center {

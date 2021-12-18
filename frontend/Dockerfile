@@ -1,6 +1,6 @@
 # build stage
-FROM node as build-stage
-RUN apk --no-cache add git make python3 g++
+FROM node:lts-alpine as build-stage
+RUN apk add --no-cache python3 build-base # build base includes g++ and gcc and Make
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --production=false
