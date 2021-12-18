@@ -11,7 +11,7 @@
             Rain: {{location.weather[viewDate].rain_perc}}% = {{location.weather[viewDate].rain}} mm
         </div>
         <div>
-            Rain last 2 days: {{location.weather[viewDate].["rain_last_2_day"]}} mm
+            Rain last 2 days: {{location.weather[viewDate].rain_last_2_day}} mm
         </div>
     </div>
 </template>
