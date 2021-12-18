@@ -7,7 +7,6 @@ load_dotenv()
 
 
 SECRET_KEY = environ.get("SECRET_KEY")
-print(SECRET_KEY)
 
 WEATHER_API = environ.get("WEATHER_API")
 WEATHER_KEY = environ.get("WEATHER_KEY")
