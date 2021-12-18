@@ -12,12 +12,6 @@ services:
     ports:
       - "80:8080"
       - "443:8080"
-    env_file:
-      - .env
-    environment:
-      - STAGING=1
-      - DEBUG=1 
-
 
   backend:
     container_name: backend
