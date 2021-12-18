@@ -3,17 +3,20 @@
     "version": "0.1.0",
     "private": true,
     "description": "climbing weather map",
-    "author": {
+    "author":
+    {
         "name": "Fanoway"
     },
-    "scripts": {
+    "scripts":
+    {
         "serve": "vue-cli-service serve ",
         "build": "vue-cli-service build --mode production",
         "builddev": "vue-cli-service build --mode development",
         "compile:sass": "node-sass --source-map true ./src/assets/custom.scss -o ./src/assets/"
     },
     "main": "index.js",
-    "dependencies": {
+    "dependencies":
+    {
         "@vue-leaflet/vue-leaflet": "^0.6.1",
         "@vueform/slider": "github:vueform/slider",
         "axios": "^0.21.4",
@@ -24,7 +27,8 @@
         "leaflet": "^1.7.1",
         "vue": "^3.2.26"
     },
-    "devDependencies": {
+    "devDependencies":
+    {
         "@vue/cli-plugin-babel": "^4.5.15",
         "@vue/cli-service": "^4.5.15",
         "@vue/compiler-sfc": "^3.2.26",
@@ -32,13 +36,15 @@
         "sass-loader": "^10.2.0"
     },
     "_id": "weathermap@0.1.0",
-    "bugs": {
+    "bugs":
+    {
         "url": "https://github.com/fanoway/WeatherMap/issues"
     },
     "homepage": "https://github.com/fanoway/WeatherMap#readme",
     "license": "MIT",
     "readme": "README.md",
-    "repository": {
+    "repository":
+    {
         "type": "git",
         "url": "git+https://github.com/fanoway/WeatherMap.git"
     }
