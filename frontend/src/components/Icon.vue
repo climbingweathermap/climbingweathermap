@@ -8,7 +8,7 @@
                 <img :src="getRainIcon(location)" height="32" />
             </div>
             <div>
-                <p>{{location.weather[viewDate].temp.toFixed(1)}} C</p>
+                <p>{{location.weather[viewDate].temp.toFixed(1)}}C</p>
             </div>
             <div v-if="largeIcon || showPopup">
                 <a v-if="location.url" :href="location.url">
