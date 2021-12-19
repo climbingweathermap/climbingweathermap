@@ -46,7 +46,7 @@
             },
             getLocationPromise: function() {
                 if (process.env.NODE_ENV === "production") {
-                    var path = "http://climbing-weather-map.com/api/v1/locations"
+                    var path = "https://climbing-weather-map.com/api/v1/locations"
                 } else {
                     var path = "http://localhost:5000/api/v1/locations"
                 }
