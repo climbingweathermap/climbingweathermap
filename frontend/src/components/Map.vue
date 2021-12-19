@@ -9,7 +9,6 @@
                 </l-icon>
             </l-marker>
         </l-map>
-        <h2>{{zoom}}</h2>
     </div>
 </template>
 
