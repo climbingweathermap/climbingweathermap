@@ -105,6 +105,10 @@ celerybeat-schedule
 # SageMath parsed files
 *.sage.py
 
+# SublimeText
+*.sublime-project
+*.sublime-workspace
+
 # dotenv
 .env
 
