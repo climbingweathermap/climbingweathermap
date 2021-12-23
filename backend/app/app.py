@@ -55,6 +55,7 @@ def refresh_weather():
     """refresh the cached weather data."""
     log.info("Getting Weather...")
     locations: list[Location] = get_locations(app.config["LOCATIONS"])
+    log.debug(locations)
     for loc in locations:
         try:
             loc.get_weather(app.config["WEATHER_API"], app.config["WEATHER_KEY"])
@@ -67,6 +68,11 @@ def refresh_weather():
 
     cache.set("locations", locations)
 
+    # log cache keys after getting weather
+    log.debug("Locations fetched, keys =:")
+    for k in cache.cache._cache:
+        log.debug(k)
+
 
 @app.route("/api/v1/locations", methods=["GET"])
 def all_locations() -> Response:
@@ -74,7 +80,8 @@ def all_locations() -> Response:
     drill param is used to specify how many levels
     to drill into location tree"""
     locations: list[Location] = cache.get("locations")
-
+    log.debug("Locations:")
+    log.debug(locations)
     # if weather isn't in cache then return error code
     if locations is None:
         return Response(
