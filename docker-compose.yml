@@ -27,19 +27,8 @@ services:
 
     ports:
       - "5000:5000"
-    environment:
-      - SECRET_KEY
-      - WEATHER_API
-      - WEATHER_KEY
-      - LOCATIONS
-      - CACHE_TYPE
-      - CACHE_REDIS_PORT
-      - CACHE_DEFAULT_TIMEOUT
-      - CACHE_REDIS_HOST
-      - CACHE_REDIS_URL
-      - CACHE_REDIS_DB
-      - REFRESH_MINUTES
-      - PYTHONUNBUFFERED
+    env_file:
+      - .env
 
 
   redis:
@@ -63,6 +52,8 @@ services:
       - apinetwork
     ports:
       - "8000:8000"
+    env_file:
+      - .env
 
 
 
