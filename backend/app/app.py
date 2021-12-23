@@ -3,7 +3,6 @@
 import json
 import logging
 from flask import Flask, jsonify, Response, request
-from flask.logging import create_logger
 from flask_cors import CORS  # type: ignore
 from flask_caching import Cache  # type: ignore
 from apscheduler.schedulers.background import (  # type: ignore
@@ -16,7 +15,17 @@ from .weathermap import Location, WeatherAPIError
 app = Flask(__name__)
 app.config.from_pyfile("settings.py")
 cache = Cache(app)
-logger = create_logger(app)
+
+log = logging.getLogger(__name__)
+
+# Configure Logging
+
+logging.basicConfig(
+    filename="debug.log",
+    encoding="utf-8",
+    level=logging.DEBUG,
+    format="%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s",
+)
 
 # enable CORS
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -32,7 +41,7 @@ def get_locations(path_to_locations: str) -> list[Location]:
         location_json = json.load(json_file)
 
     locations: list[Location] = Location.create_location_tree(location_json)
-    logger.info("Locations read from source")
+    log.info("Locations read from source")
 
     return locations
 
@@ -44,17 +53,17 @@ def get_locations(path_to_locations: str) -> list[Location]:
 )
 def refresh_weather():
     """refresh the cached weather data."""
-    logger.info("Getting Weather...")
+    log.info("Getting Weather...")
     locations: list[Location] = get_locations(app.config["LOCATIONS"])
     for loc in locations:
         try:
             loc.get_weather(app.config["WEATHER_API"], app.config["WEATHER_KEY"])
 
         except WeatherAPIError as error:
-            logger.error(error)
-            logger.error(f"Weather API error, failed = {loc.name}")
+            log.error(error)
+            log.error(f"Weather API error, failed = {loc.name}")
 
-    logger.info("Weather Collected")
+    log.info("Weather Collected")
 
     cache.set("locations", locations)
 
@@ -92,8 +101,5 @@ def all_locations() -> Response:
 
 
 if __name__ != "__main__":
-    gunicorn_logger = logging.getLogger("gunicorn.error")
-    logger.handlers = gunicorn_logger.handlers
-    logger.setLevel(gunicorn_logger.level)
     cache.clear()
     refresh_weather()

@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "app"
-version = "0.1.0"
+name = "Climbing Weather Map"
+version = "1.0.0"
 description = "Climbing Weather Map"
 authors = ["Michael Ardron <climbingweathermap@gmail.com>"]
 license = "MIT"
