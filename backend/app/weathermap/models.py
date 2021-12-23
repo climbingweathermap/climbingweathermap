@@ -47,7 +47,7 @@ class Location:
 
     def get_weather(self, api_url: str, api_key: str):
 
-        logger.debug("Getting weather for {self.name")
+        logger.debug("Getting weather for {self.name}")
         try:
             self.weather_data = Weather(self.latlng, api_url, api_key, get_weather=True)
         except WeatherAPIError as error:
