@@ -39,6 +39,7 @@ services:
       - CACHE_REDIS_URL
       - CACHE_REDIS_DB
       - REFRESH_MINUTES
+      - PYTHONUNBUFFERED
 
 
   redis:

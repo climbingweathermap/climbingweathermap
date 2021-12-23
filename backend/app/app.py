@@ -68,9 +68,7 @@ def refresh_weather():
     cache.set("locations", locations)
 
     # log cache keys after getting weather
-    log.debug("Locations fetched, keys =:")
-    for k in cache.cache._cache:
-        log.debug(k)
+    log.debug("Locations fetched")
 
 
 @app.route("/api/v1/locations", methods=["GET"])
