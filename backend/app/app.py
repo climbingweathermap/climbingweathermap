@@ -21,7 +21,6 @@ log = logging.getLogger(__name__)
 # Configure Logging
 
 logging.basicConfig(
-    filename="debug.log",
     level=logging.DEBUG,
     format="%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s",
 )
